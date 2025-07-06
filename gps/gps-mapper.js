@@ -171,21 +171,6 @@ class GPSMapper {
      */
     getCurrentLocation() {
         return new Promise((resolve, reject) => {
-            // Check if testing mode is enabled
-            if (window.CONFIG && window.CONFIG.GPS_TESTING.ENABLED && window.CONFIG.GPS_TESTING.CURRENT_LOCATION) {
-                console.log('GPS-Testing-Modus aktiv - verwende Test-Koordinate');
-                const testLat = window.CONFIG.GPS_TESTING.TEST_COORDINATE.lat;
-                const testLng = window.CONFIG.GPS_TESTING.TEST_COORDINATE.lng;
-                const accuracy = 5; // Simulate high accuracy for testing
-
-                console.log(`Test-GPS: ${testLat.toFixed(6)}, ${testLng.toFixed(6)} (±${accuracy}m)`);
-
-                const vhPos = this.showUserPosition(testLat, testLng, accuracy);
-                const result = { lat: testLat, lng: testLng, accuracy, vhPos, testing: true };
-                resolve(result);
-                return;
-            }
-
             if (!navigator.geolocation) {
                 const error = new Error('Geolocation wird vom Browser nicht unterstützt');
                 reject(error);
@@ -196,15 +181,21 @@ class GPSMapper {
 
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
+                    let lat = position.coords.latitude;
+                    let lng = position.coords.longitude;
                     const accuracy = position.coords.accuracy;
 
-                    console.log(`GPS erhalten: ${lat.toFixed(6)}, ${lng.toFixed(6)} (±${accuracy}m)`);
+                    // Check if testing mode is enabled and apply offset
+                    if (window.CONFIG && window.CONFIG.GPS_TESTING.ENABLED) {
+                        lat += window.CONFIG.GPS_TESTING.TEST_OFFSET.lat;
+                        lng += window.CONFIG.GPS_TESTING.TEST_OFFSET.lng;
+                        console.log(`GPS-Testing aktiv: ${lat.toFixed(6)}, ${lng.toFixed(6)} (±${accuracy}m) [OFFSET]`);
+                    } else {
+                        console.log(`GPS erhalten: ${lat.toFixed(6)}, ${lng.toFixed(6)} (±${accuracy}m)`);
+                    }
 
                     const vhPos = this.showUserPosition(lat, lng, accuracy);
-
-                    const result = { lat, lng, accuracy, vhPos };
+                    const result = { lat, lng, accuracy, vhPos, testing: window.CONFIG?.GPS_TESTING.ENABLED || false };
                     resolve(result);
                 },
                 (error) => {
@@ -368,16 +359,15 @@ class GPSMapper {
 
     /**
      * Aktiviert den GPS-Testing-Modus
-     * Speichert die aktuelle Position und verwendet dann Test-Koordinaten
+     * Berechnet Offset um aktuelle Position auf ersten Marker zu mappen
      */
     enableTestingMode() {
-        if (!window.CONFIG) {
-            console.error('CONFIG nicht verfügbar für Testing-Modus');
-            return false;
+        if (!window.CONFIG || !window.CONFIG.GPS_MARKERS || window.CONFIG.GPS_MARKERS.length === 0) {
+            console.error('CONFIG oder GPS_MARKERS nicht verfügbar');
+            return Promise.reject(new Error('Konfiguration nicht verfügbar'));
         }
 
         return new Promise((resolve, reject) => {
-            // Erst die echte GPS-Position ermitteln
             if (!navigator.geolocation) {
                 reject(new Error('Geolocation wird vom Browser nicht unterstützt'));
                 return;
@@ -385,10 +375,17 @@ class GPSMapper {
 
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    // Aktuelle Position als "Basis" speichern
-                    window.CONFIG.GPS_TESTING.CURRENT_LOCATION = {
+                    // Aktuelle Position speichern
+                    window.CONFIG.GPS_TESTING.REAL_LOCATION = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
+                    };
+
+                    // Offset berechnen um aktuelle Position auf ersten Marker zu mappen
+                    const firstMarker = window.CONFIG.GPS_MARKERS[0];
+                    window.CONFIG.GPS_TESTING.TEST_OFFSET = {
+                        lat: firstMarker.lat - position.coords.latitude,
+                        lng: firstMarker.lng - position.coords.longitude
                     };
 
                     // Testing-Modus aktivieren
@@ -396,11 +393,13 @@ class GPSMapper {
 
                     console.log(`GPS-Testing-Modus aktiviert:`);
                     console.log(`Echte Position: ${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`);
-                    console.log(`Test-Koordinate: ${window.CONFIG.GPS_TESTING.TEST_COORDINATE.lat.toFixed(6)}, ${window.CONFIG.GPS_TESTING.TEST_COORDINATE.lng.toFixed(6)}`);
+                    console.log(`Gemappt auf: ${firstMarker.id} (${firstMarker.lat.toFixed(6)}, ${firstMarker.lng.toFixed(6)})`);
+                    console.log(`Offset: ${window.CONFIG.GPS_TESTING.TEST_OFFSET.lat.toFixed(6)}, ${window.CONFIG.GPS_TESTING.TEST_OFFSET.lng.toFixed(6)}`);
 
                     resolve({
-                        realLocation: window.CONFIG.GPS_TESTING.CURRENT_LOCATION,
-                        testCoordinate: window.CONFIG.GPS_TESTING.TEST_COORDINATE
+                        realLocation: window.CONFIG.GPS_TESTING.REAL_LOCATION,
+                        mappedTo: firstMarker,
+                        offset: window.CONFIG.GPS_TESTING.TEST_OFFSET
                     });
                 },
                 (error) => {
@@ -421,35 +420,12 @@ class GPSMapper {
     disableTestingMode() {
         if (window.CONFIG) {
             window.CONFIG.GPS_TESTING.ENABLED = false;
-            window.CONFIG.GPS_TESTING.CURRENT_LOCATION = null;
+            window.CONFIG.GPS_TESTING.REAL_LOCATION = null;
+            window.CONFIG.GPS_TESTING.TEST_OFFSET = { lat: 0, lng: 0 };
             console.log('GPS-Testing-Modus deaktiviert');
             return true;
         }
         return false;
-    }
-
-    /**
-     * Setzt die Test-Koordinate auf einen bestimmten Marker
-     */
-    setTestCoordinateToMarker(markerId) {
-        if (!window.CONFIG || !window.CONFIG.GPS_MARKERS) {
-            console.error('CONFIG oder GPS_MARKERS nicht verfügbar');
-            return false;
-        }
-
-        const marker = window.CONFIG.GPS_MARKERS.find(m => m.id === markerId);
-        if (!marker) {
-            console.error(`Marker ${markerId} nicht gefunden`);
-            return false;
-        }
-
-        window.CONFIG.GPS_TESTING.TEST_COORDINATE = {
-            lat: marker.lat,
-            lng: marker.lng
-        };
-
-        console.log(`Test-Koordinate gesetzt auf ${markerId}: ${marker.lat.toFixed(6)}, ${marker.lng.toFixed(6)}`);
-        return true;
     }
 
     /**
@@ -460,8 +436,8 @@ class GPSMapper {
 
         return {
             enabled: window.CONFIG.GPS_TESTING.ENABLED,
-            currentLocation: window.CONFIG.GPS_TESTING.CURRENT_LOCATION,
-            testCoordinate: window.CONFIG.GPS_TESTING.TEST_COORDINATE
+            realLocation: window.CONFIG.GPS_TESTING.REAL_LOCATION,
+            offset: window.CONFIG.GPS_TESTING.TEST_OFFSET
         };
     }
 }

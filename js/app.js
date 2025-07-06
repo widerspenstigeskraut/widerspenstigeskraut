@@ -95,7 +95,6 @@ class App {
     body.append('<button id="gpsTestingBtn" class="gps-testing-toggle">🧪 Test Mode</button>');
     body.append('<div id="gpsStatus" class="gps-status"></div>');
     body.append('<div id="gpsCoordinates" class="gps-coordinates"></div>');
-    body.append('<div id="gpsTestingControls" class="gps-testing-controls" style="display: none;"></div>');
     
     this.addProximityCSS();
   }
@@ -367,66 +366,26 @@ class App {
       // Disable testing mode
       this.gpsManager.disableTestingMode();
       btn.removeClass('active').text('🧪 Test Mode');
-      $('#gpsTestingControls').hide();
       this.showGPSStatus('Test-Modus deaktiviert', 'success');
     } else {
       // Enable testing mode
-      btn.addClass('loading').text('🔄 Aktiviere...');
-      this.showGPSStatus('Test-Modus wird aktiviert...', 'loading');
+      btn.addClass('loading').text('🔄 Setze Position...');
+      this.showGPSStatus('Aktuelle Position wird auf ersten Marker gemappt...', 'loading');
 
       this.gpsManager.enableTestingMode()
         .then(result => {
           btn.removeClass('loading').addClass('active').text('🧪 Test Aktiv');
-          this.showGPSStatus('Test-Modus aktiviert', 'success');
-          this.createTestingControls();
+          this.showGPSStatus(`Position gemappt auf ${result.mappedTo.id}`, 'success');
+          
+          // Auto-refresh GPS to show new test position
+          setTimeout(() => {
+            this.handleGPSUpdate();
+          }, 500);
         })
         .catch(error => {
           btn.removeClass('loading').text('🧪 Test Mode');
           this.showGPSStatus('Test-Modus Fehler: ' + error.message, 'error');
         });
-    }
-  }
-
-  createTestingControls() {
-    const controlsContainer = $('#gpsTestingControls');
-    controlsContainer.empty();
-
-    const controlsHTML = `
-      <div class="testing-controls-content">
-        <h4>GPS Test-Modus</h4>
-        <p>Wähle einen Marker zum Testen:</p>
-        <div class="marker-buttons">
-          ${CONFIG.GPS_MARKERS.map(marker => 
-            `<button class="test-marker-btn" data-marker="${marker.id}">${marker.id}</button>`
-          ).join('')}
-        </div>
-        <button id="refreshTestGPS" class="refresh-test-btn">📍 Position Aktualisieren</button>
-      </div>
-    `;
-
-    controlsContainer.html(controlsHTML).show();
-
-    // Bind events for testing controls
-    $('.test-marker-btn').on('click', (e) => {
-      const markerId = $(e.target).data('marker');
-      this.setTestMarker(markerId);
-    });
-
-    $('#refreshTestGPS').on('click', () => {
-      this.handleGPSUpdate();
-    });
-  }
-
-  setTestMarker(markerId) {
-    if (this.gpsManager.setTestCoordinateToMarker(markerId)) {
-      $('.test-marker-btn').removeClass('active');
-      $(`.test-marker-btn[data-marker="${markerId}"]`).addClass('active');
-      this.showGPSStatus(`Test-Position: ${markerId}`, 'success');
-      
-      // Auto-refresh GPS to show new position
-      setTimeout(() => {
-        this.handleGPSUpdate();
-      }, 500);
     }
   }
 

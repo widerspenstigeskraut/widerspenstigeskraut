@@ -36,8 +36,8 @@ const CONFIG = {
     // GPS Testing mode
     GPS_TESTING: {
         ENABLED: false,
-        TEST_COORDINATE: {lat: 51.4634, lng: 11.9695}, // Default test coordinate
-        CURRENT_LOCATION: null // Will be set when user enables test mode
+        REAL_LOCATION: null, // User's actual GPS position
+        TEST_OFFSET: { lat: 0, lng: 0 } // Offset to map real location to first marker
     },
 
     // CSS classes
