@@ -9,6 +9,19 @@ class GPSMapper {
         this.watchId = null;
         this.isTracking = false;
 
+        // Performance improvements
+        this.positionHistory = [];
+        this.lastValidPosition = null;
+        this.smoothedPosition = null;
+        this.updateRequestId = null;
+        this.pendingDOMUpdate = false;
+
+        // Smoothing parameters
+        this.smoothingFactor = 0.3; // Lower = more smoothing
+        this.maxJumpDistance = 30; // meters
+        this.minAccuracy = 100; // meters
+        this.maxHistorySize = 5;
+
         // Referenzpunkte initialisieren
         this.initReferencePoints();
     }
@@ -98,24 +111,41 @@ class GPSMapper {
      */
     showUserPosition(lat, lng, accuracy = null) {
         try {
-            const vhPos = this.transformGPSToVH(lat, lng);
+            // GPS-Qualitätsprüfung
+            if (!this.isValidGPSReading(lat, lng, accuracy)) {
+                console.log('GPS reading rejected: poor quality');
+                return null;
+            }
 
-            // Bestehenden User-Marker entfernen
-            this.removeUserMarker();
+            // Position glätten
+            const smoothedPos = this.smoothPosition(lat, lng, accuracy);
+            if (!smoothedPos) {
+                return null;
+            }
 
-            // Neuen User-Marker erstellen
-            const userMarker = this.createUserMarker(vhPos, accuracy);
-
-            // Zur Karte hinzufügen
-            $('.hintergrund').append(userMarker);
+            const vhPos = this.transformGPSToVH(smoothedPos.lat, smoothedPos.lng);
 
             // Position speichern
-            this.currentPosition = {lat, lng, x: vhPos.x, y: vhPos.y, accuracy};
+            this.currentPosition = {
+                lat: smoothedPos.lat,
+                lng: smoothedPos.lng,
+                x: vhPos.x,
+                y: vhPos.y,
+                accuracy: smoothedPos.accuracy
+            };
 
-            console.log(`User Position: GPS(${lat.toFixed(6)}, ${lng.toFixed(6)}) -> VH(${vhPos.x.toFixed(1)}, ${vhPos.y.toFixed(1)})`);
+            // DOM-Update optimiert durchführen
+            this.schedulePositionUpdate(vhPos, smoothedPos.accuracy);
+
+            console.log(`User Position (smoothed): GPS(${smoothedPos.lat.toFixed(6)}, ${smoothedPos.lng.toFixed(6)}) -> VH(${vhPos.x.toFixed(1)}, ${vhPos.y.toFixed(1)})`);
 
             // Event für Positionsupdate feuern
-            this.triggerPositionUpdate({lat, lng, vhPos, accuracy});
+            this.triggerPositionUpdate({
+                lat: smoothedPos.lat,
+                lng: smoothedPos.lng,
+                vhPos,
+                accuracy: smoothedPos.accuracy
+            });
 
             return vhPos;
         } catch (error) {
@@ -246,8 +276,8 @@ class GPSMapper {
             },
             {
                 enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 500
+                timeout: 8000,
+                maximumAge: 2000
             }
         );
 
@@ -443,6 +473,130 @@ class GPSMapper {
             realLocation: window.CONFIG.GPS_TESTING.REAL_LOCATION,
             offset: window.CONFIG.GPS_TESTING.TEST_OFFSET
         };
+    }
+
+    /**
+     * Prüft ob eine GPS-Messung valide ist
+     */
+    isValidGPSReading(lat, lng, accuracy) {
+        // Grundlegende Koordinatenprüfung
+        if (!lat || !lng || Math.abs(lat) > 90 || Math.abs(lng) > 180) {
+            return false;
+        }
+
+        // Genauigkeitsprüfung
+        if (accuracy && accuracy > this.minAccuracy) {
+            console.log(`GPS accuracy too poor: ${accuracy}m`);
+            return false;
+        }
+
+        // Sprungdistanz prüfen
+        if (this.lastValidPosition) {
+            const distance = this.calculateDistance(
+                this.lastValidPosition.lat,
+                this.lastValidPosition.lng,
+                lat,
+                lng
+            );
+
+            if (distance > this.maxJumpDistance) {
+                console.log(`GPS jump too large: ${distance}m`);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Glättet GPS-Positionen mit exponentieller Glättung
+     */
+    smoothPosition(lat, lng, accuracy) {
+        const newPosition = {lat, lng, accuracy, timestamp: Date.now()};
+
+        // Zur Historie hinzufügen
+        this.positionHistory.push(newPosition);
+        if (this.positionHistory.length > this.maxHistorySize) {
+            this.positionHistory.shift();
+        }
+
+        // Erste Position oder nach Reset
+        if (!this.smoothedPosition) {
+            this.smoothedPosition = {...newPosition};
+            this.lastValidPosition = {...newPosition};
+            return this.smoothedPosition;
+        }
+
+        // Exponentielle Glättung
+        this.smoothedPosition.lat = this.smoothedPosition.lat * (1 - this.smoothingFactor) + lat * this.smoothingFactor;
+        this.smoothedPosition.lng = this.smoothedPosition.lng * (1 - this.smoothingFactor) + lng * this.smoothingFactor;
+        this.smoothedPosition.accuracy = accuracy;
+        this.smoothedPosition.timestamp = Date.now();
+
+        this.lastValidPosition = {...newPosition};
+
+        return this.smoothedPosition;
+    }
+
+    /**
+     * Optimierte DOM-Updates mit requestAnimationFrame
+     */
+    schedulePositionUpdate(vhPos, accuracy) {
+        if (this.pendingDOMUpdate) {
+            return;
+        }
+
+        this.pendingDOMUpdate = true;
+
+        if (this.updateRequestId) {
+            cancelAnimationFrame(this.updateRequestId);
+        }
+
+        this.updateRequestId = requestAnimationFrame(() => {
+            this.updatePositionDOM(vhPos, accuracy);
+            this.pendingDOMUpdate = false;
+        });
+    }
+
+    /**
+     * Aktualisiert DOM-Elemente für Benutzerposition
+     */
+    updatePositionDOM(vhPos, accuracy) {
+        const existingMarker = $('#userMarker');
+
+        if (existingMarker.length > 0) {
+            // Bestehenden Marker animiert verschieben
+            existingMarker.css({
+                'top': `${vhPos.y}vh`,
+                'left': `${vhPos.x}vh`,
+                'transition': 'top 0.3s ease-out, left 0.3s ease-out'
+            });
+
+            // Genauigkeitskreis aktualisieren
+            const accuracyCircle = existingMarker.find('.gps-accuracy-circle');
+            if (accuracyCircle.length > 0 && accuracy) {
+                const size = this.accuracyToVH(accuracy);
+                accuracyCircle.css({
+                    'width': `${size}vh`,
+                    'height': `${size}vh`
+                });
+            }
+        } else {
+            // Neuen Marker erstellen
+            this.removeUserMarker();
+            const userMarker = this.createUserMarker(vhPos, accuracy);
+            $('.hintergrund').append(userMarker);
+        }
+    }
+
+    /**
+     * Setzt Glättungsparameter zurück
+     */
+    resetSmoothing() {
+        this.positionHistory = [];
+        this.lastValidPosition = null;
+        this.smoothedPosition = null;
+        console.log('GPS smoothing reset');
     }
 }
 
