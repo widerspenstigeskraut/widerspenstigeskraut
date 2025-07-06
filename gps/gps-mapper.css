@@ -1,0 +1,288 @@
+/**
+ * GPS-Mapper Styles
+ * Styles für die Benutzerposition und GPS-Funktionalität
+ */
+
+/* Benutzerposition Container */
+.gps-user-position {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 25;
+    cursor: default;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+}
+
+/* Benutzer-Punkt */
+.gps-user-dot {
+    width: 16px;
+    height: 16px;
+    background: #007bff;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.6);
+    animation: gpsUserPulse 2s infinite ease-in-out;
+    z-index: 26;
+}
+
+/* Genauigkeitskreis */
+.gps-accuracy-circle {
+    position: absolute;
+    border: 2px solid rgba(0, 123, 255, 0.3);
+    border-radius: 50%;
+    background: rgba(0, 123, 255, 0.1);
+    pointer-events: none;
+    z-index: 24;
+    transform: translate(-50%, -50%);
+    animation: gpsAccuracyPulse 3s infinite ease-in-out;
+}
+
+/* Pulse-Animation für User-Punkt */
+@keyframes gpsUserPulse {
+    0% {
+        box-shadow: 0 0 15px rgba(0, 123, 255, 0.6);
+        transform: scale(1);
+    }
+
+    50% {
+        box-shadow: 0 0 25px rgba(0, 123, 255, 0.8);
+        transform: scale(1.1);
+    }
+
+    100% {
+        box-shadow: 0 0 15px rgba(0, 123, 255, 0.6);
+        transform: scale(1);
+    }
+}
+
+/* Animation für Genauigkeitskreis */
+@keyframes gpsAccuracyPulse {
+    0% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(0.95);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    100% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(0.95);
+    }
+}
+
+/* GPS-Update-Button */
+.gps-update-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    padding: 12px 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    transition: all 0.3s ease;
+    font-family: inherit;
+    min-width: 120px;
+    text-align: center;
+}
+
+.gps-update-button:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+}
+
+.gps-update-button:active {
+    transform: translateY(0);
+}
+
+.gps-update-button:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 2px 6px rgba(108, 117, 125, 0.3);
+}
+
+/* Button States */
+.gps-update-button.loading {
+    background: #ffc107;
+    color: #000;
+}
+
+.gps-update-button.success {
+    background: #28a745;
+    color: white;
+}
+
+.gps-update-button.error {
+    background: #dc3545;
+    color: white;
+}
+
+/* GPS-Status-Anzeige */
+.gps-status {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: monospace;
+    max-width: 300px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.gps-status.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.gps-status.success {
+    background: rgba(40, 167, 69, 0.9);
+}
+
+.gps-status.error {
+    background: rgba(220, 53, 69, 0.9);
+}
+
+.gps-status.loading {
+    background: rgba(255, 193, 7, 0.9);
+    color: #000;
+}
+
+/* GPS-Koordinaten-Anzeige */
+.gps-coordinates {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 999;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 6px;
+    font-size: 11px;
+    font-family: monospace;
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.gps-coordinates.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Toggle-Button für GPS-Tracking */
+.gps-tracking-toggle {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 1000;
+    padding: 10px;
+    background: #17a2b8;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
+    transition: all 0.3s ease;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gps-tracking-toggle:hover {
+    background: #138496;
+    transform: scale(1.05);
+}
+
+.gps-tracking-toggle.active {
+    background: #28a745;
+    animation: gpsTrackingActive 2s infinite;
+}
+
+@keyframes gpsTrackingActive {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 4px 20px rgba(40, 167, 69, 0.6);
+    }
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+    .gps-update-button {
+        bottom: 15px;
+        right: 15px;
+        padding: 10px 14px;
+        font-size: 13px;
+        min-width: 100px;
+    }
+
+    .gps-tracking-toggle {
+        bottom: 70px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+        font-size: 14px;
+    }
+
+    .gps-status {
+        top: 15px;
+        right: 15px;
+        max-width: 250px;
+        font-size: 11px;
+    }
+
+    .gps-coordinates {
+        bottom: 15px;
+        left: 15px;
+        font-size: 10px;
+    }
+}
+
+/* High-DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+    .gps-user-dot {
+        box-shadow: 0 0 15px rgba(0, 123, 255, 0.6);
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .gps-status {
+        background: rgba(255, 255, 255, 0.9);
+        color: #000;
+    }
+
+    .gps-coordinates {
+        background: rgba(255, 255, 255, 0.9);
+        color: #000;
+    }
+}

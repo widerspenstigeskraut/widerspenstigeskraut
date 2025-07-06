@@ -1,0 +1,364 @@
+@font-face {
+    font-family: 'Ouvriere';
+    font-style: normal;
+    src: url("fonts/Ouvrieres-soldates.woff") format("woff");
+}
+
+@font-face {
+    font-family: 'ReplicaStd';
+    font-style: normal;
+    src: url("fonts/ReplicaStd.woff") format("woff");
+}
+
+@font-face {
+    font-family: 'Ouroboros';
+    font-style: normal;
+    src: url("fonts/Ouroboros-Regular.woff") format("woff");
+}
+
+@font-face {
+    font-family: 'Ornaments';
+    font-style: normal;
+    src: url("fonts/Bodoni\ Ornaments.woff") format("woff");
+}
+
+@font-face {
+    font-family: 'Cosplay';
+    font-style: normal;
+    src: url("fonts/Cosplay-Trial-Regular.woff") format("woff");
+}
+
+/* :root {
+  overscroll-behavior: none;
+} */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'ReplicaStd', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overscroll-behavior: none;
+}
+
+.hintergrund {
+    position: relative;
+    width: min-content;
+    z-index: 1;
+    height: 100%;
+}
+
+.farbflaeche {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 30;
+    background-color: rgb(150, 0, 215);
+    mix-blend-mode: luminosity;
+}
+
+.textur {
+    position: relative;
+    width: auto;
+    height: 100vh;
+    object-fit: cover;
+    object-position: left center;
+    min-width: 100vw;
+    vertical-align: bottom;
+}
+
+.karte {
+    position: absolute;
+    width: auto;
+    height: 100%;
+    object-fit: cover;
+    object-position: left center;
+    min-width: 100vw;
+    top: 0;
+    left: 0;
+    vertical-align: bottom;
+    filter: drop-shadow(0px 0px 30px rgb(9, 255, 0));
+}
+
+.red-circle {
+    display: flex;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    min-width: 35px;
+    min-height: 35px;
+    max-width: 60px;
+    max-height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 15;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+
+    &.text {
+        background-color: rgba(255, 255, 255, 0.8);
+        border: solid 2px rgb(150, 0, 215);
+        color: rgb(150, 0, 215);
+        font-family: 'Ouvriere', sans-serif;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    &.magic {
+        color: rgb(9, 255, 0);
+        font-family: 'Ouroboros';
+        font-size: 40px;
+    }
+
+    &.pflanze {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+#pflanze1 {
+    top: 67vh;
+    left: 55vh;
+    font-family: 'Ornaments';
+}
+
+#pflanze2 {
+    top: 65vh;
+    left: 18vh;
+}
+
+#pflanze3 {
+    top: 65vh;
+    left: 98vh;
+}
+
+#pflanze4 {
+    top: 60vh;
+    left: 142vh;
+}
+
+#pflanze5 {
+    top: 60vh;
+    left: 105vh;
+}
+
+#redCircle1 {
+    top: 55vh;
+    left: 15vh;
+}
+
+#redCircle2 {
+    top: 39vh;
+    left: 72vh;
+}
+
+#redCircle3 {
+    top: 48vh;
+    left: 110vh;
+}
+
+#magic1 {
+    top: 45vh;
+    left: 40vh;
+}
+
+#magic2 {
+    top: 88vh;
+    left: 134vh;
+}
+
+#magic3 {
+    top: 30vh;
+    left: 110vh;
+}
+
+
+.magic-close-button {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    font-family: 'ReplicaStd';
+    transform: translateX(-50%);
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: rgb(0, 0, 0);
+    -webkit-text-stroke: 1.3px black;
+    cursor: pointer;
+    z-index: 60;
+    transition: transform 0.3s ease;
+    display: none;
+}
+
+.magic-close-button.visible {
+    display: flex;
+}
+
+
+.red-circle.magic.fullscreen {
+    position: fixed;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    max-height: none !important;
+    border-radius: 0;
+    z-index: 50;
+    background-color: rgba(70, 113, 88, 0.507);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    backdrop-filter: blur(3px);
+
+    p {
+        animation: magicRotate 5s infinite linear;
+        font-size: 42vh;
+    }
+}
+
+@keyframes magicRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* Pflanze fullscreen styles */
+.red-circle.pflanze.fullscreen {
+    position: fixed;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    max-height: none !important;
+    border-radius: 0;
+    z-index: 50;
+    background-color: rgba(70, 113, 88, 0.507);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    backdrop-filter: blur(3px);
+
+    img {
+        animation: pflanzeImagePulse 3s infinite alternate ease-in-out;
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+
+    }
+}
+
+@keyframes pflanzeImagePulse {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0.9);
+    }
+}
+
+/* Close button für Pflanzen-Fullscreen */
+.pflanze-close-button {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    font-family: 'ReplicaStd';
+    transform: translateX(-50%);
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: rgb(0, 0, 0);
+    -webkit-text-stroke: 1.3px black;
+    cursor: pointer;
+    z-index: 60;
+    transition: transform 0.3s ease;
+    display: none;
+}
+
+.pflanze-close-button.visible {
+    display: flex;
+}
+
+.anweisung {
+    display: none;
+}
+
+.anweisungsbox {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: -100%;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(161, 18, 223, 0.302);
+    filter: drop-shadow(0px 0px 30px rgb(0, 0, 0));
+    font-family: 'ReplicaStd';
+    font-size: 25px;
+    line-height: 1.1;
+    -webkit-text-stroke: 1.3px black;
+    z-index: 40;
+    padding: 20px;
+    font-variant-ligatures: normal;
+    transition: top 0.5s ease-in-out;
+    backdrop-filter: blur(3px);
+}
+
+/* Anweisungen in der Anweisungsbox */
+.anweisungsbox p {
+    margin: 0 0 8px 0;
+    text-align: left;
+    break-inside: avoid;
+    word-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+}
+
+.anweisung span {
+    font-size: 40px;
+    font-family: 'Ouroboros';
+}
+
+.anweisungsbox.visible {
+    top: 0;
+    /* Fährt in die sichtbare Position */
+}
+
+/* Rote Kreise ausblenden wenn Anweisungsbox sichtbar ist */
+.anweisungsbox.visible ~ .red-circle {
+    display: none;
+}
+
+.close-button {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    font-family: 'ReplicaStd';
+    transform: translateX(-50%);
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: rgb(0, 0, 0);
+    -webkit-text-stroke: 1.3px black;
+    cursor: pointer;
+    z-index: 20;
+    transition: transform 0.3s ease;
+}
