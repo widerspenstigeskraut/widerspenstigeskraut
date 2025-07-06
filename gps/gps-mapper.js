@@ -246,8 +246,8 @@ class GPSMapper {
             },
             {
                 enableHighAccuracy: true,
-                timeout: 8000,
-                maximumAge: 3000
+                timeout: 5000,
+                maximumAge: 500
             }
         );
 

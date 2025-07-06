@@ -96,6 +96,11 @@
             <button class="close-button" id="closeButton">↑</button>
         </div>
 
+        <div id="userMarker" class="gps-user-position">
+            <div class="gps-user-dot"></div>
+            ${accuracy ? `<div class="gps-accuracy-circle" style="width: 5vh; height: 5vh; left: 20vh; right: 20vh"></div>` : ''}
+        </div>
+
         <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'></script>
         <script src="./gps/gps-mapper.js"></script>
         <script src="./js/config.js"></script>
