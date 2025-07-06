@@ -133,111 +133,111 @@
 
 /* GPS Testing Controls */
 .gps-testing-controls {
-  position: fixed;
-  top: 100px;
-  right: 20px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 15px;
-  border-radius: 8px;
-  z-index: 100;
-  max-width: 300px;
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    z-index: 100;
+    max-width: 300px;
 }
 
 .testing-controls-content h4 {
-  margin: 0 0 10px 0;
-  font-size: 16px;
+    margin: 0 0 10px 0;
+    font-size: 16px;
 }
 
 .testing-controls-content p {
-  margin: 0 0 10px 0;
-  font-size: 12px;
+    margin: 0 0 10px 0;
+    font-size: 12px;
 }
 
 .marker-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
 }
 
 .test-marker-btn {
-  background: #333;
-  color: white;
-  border: 1px solid #555;
-  padding: 5px 8px;
-  border-radius: 4px;
-  font-size: 10px;
-  cursor: pointer;
-  transition: all 0.2s;
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
 .test-marker-btn:hover {
-  background: #555;
+    background: #555;
 }
 
 .test-marker-btn.active {
-  background: #4CAF50;
-  border-color: #4CAF50;
+    background: #4CAF50;
+    border-color: #4CAF50;
 }
 
 .refresh-test-btn {
-  background: #2196F3;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
-  width: 100%;
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    width: 100%;
 }
 
 .refresh-test-btn:hover {
-  background: #1976D2;
+    background: #1976D2;
 }
 
 /* GPS Testing Toggle Button */
 .gps-testing-toggle {
-  position: fixed;
-  bottom: 140px;
-  right: 20px;
-  z-index: 1000;
-  padding: 10px 15px;
-  background: #9C27B0;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 12px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
-  transition: all 0.3s ease;
-  font-family: inherit;
-  min-width: 100px;
-  text-align: center;
+    position: fixed;
+    bottom: 140px;
+    right: 20px;
+    z-index: 1000;
+    padding: 10px 15px;
+    background: #9C27B0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+    transition: all 0.3s ease;
+    font-family: inherit;
+    min-width: 100px;
+    text-align: center;
 }
 
 .gps-testing-toggle:hover {
-  background: #7B1FA2;
-  transform: translateY(-2px);
+    background: #7B1FA2;
+    transform: translateY(-2px);
 }
 
 .gps-testing-toggle.loading {
-  background: #ffc107;
-  color: #000;
+    background: #ffc107;
+    color: #000;
 }
 
 .gps-testing-toggle.active {
-  background: #4CAF50;
-  animation: gpsTestingActive 2s infinite;
+    background: #4CAF50;
+    animation: gpsTestingActive 2s infinite;
 }
 
 @keyframes gpsTestingActive {
-  0%, 100% {
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-  }
-  50% {
-    box-shadow: 0 4px 20px rgba(76, 175, 80, 0.6);
-  }
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(76, 175, 80, 0.6);
+    }
 }
 
 /* GPS-Status-Anzeige */

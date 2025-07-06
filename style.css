@@ -40,6 +40,7 @@ body {
     padding: 0;
     box-sizing: border-box;
     overscroll-behavior: none;
+    overflow-y: hidden !important;
 }
 
 body.no-scroll {
@@ -258,10 +259,31 @@ body.no-scroll {
     font-family: 'Ouroboros';
 }
 
-/* Rote Kreise ausblenden wenn Anweisungsbox sichtbar ist */
-/*.anweisungsbox.visible ~ .map-point {
-    display: none;
-}*/
+.reference-point {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background-color: red;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+#referencePoint1{
+    top: 17dvh;
+    left: 40dvh;
+}
+
+#referencePoint2{
+    top: 74.5dvh;
+    left: 91dvh;
+}
+
+#referencePoint3{
+    top: 14dvh;
+    left: 155dvh;
+}
 
 .close-button {
     position: absolute;

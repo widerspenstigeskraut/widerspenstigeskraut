@@ -325,7 +325,7 @@ class App {
             this.gpsManager.enableTestingMode()
                 .then(result => {
                     btn.removeClass('loading').addClass('active').text('🧪 Test Aktiv');
-                    this.showGPSStatus(`Position gemappt auf ${result.mappedTo.id}`, 'success');
+                    this.showGPSStatus(`Simulated walking: ${result.path}`, 'success');
 
                     // Auto-refresh GPS to show new test position
                     setTimeout(() => {
