@@ -114,12 +114,7 @@ class App {
     }
 
     triggerMarkerProximity(markerId) {
-        $(`#${markerId}`).addClass(CONFIG.CSS_CLASSES.PROXIMITY_HIGHLIGHT);
         this.showGPSStatus(`In der Nähe von ${markerId}`, 'success');
-
-        setTimeout(() => {
-            $(`#${markerId}`).removeClass(CONFIG.CSS_CLASSES.PROXIMITY_HIGHLIGHT);
-        }, CONFIG.PROXIMITY_HIGHLIGHT_DURATION);
     }
 
     disableScrolling() {
