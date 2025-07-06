@@ -92,8 +92,10 @@ class App {
     let body = $('body');
     body.append('<button id="gpsUpdateBtn" class="gps-update-button">📍 GPS Update</button>');
     body.append('<button id="gpsTrackingBtn" class="gps-tracking-toggle">🎯</button>');
+    body.append('<button id="gpsTestingBtn" class="gps-testing-toggle">🧪 Test Mode</button>');
     body.append('<div id="gpsStatus" class="gps-status"></div>');
     body.append('<div id="gpsCoordinates" class="gps-coordinates"></div>');
+    body.append('<div id="gpsTestingControls" class="gps-testing-controls" style="display: none;"></div>');
     
     this.addProximityCSS();
   }
@@ -161,6 +163,14 @@ class App {
     }, CONFIG.PROXIMITY_HIGHLIGHT_DURATION);
   }
 
+  disableScrolling() {
+    $('body').addClass('no-scroll');
+  }
+
+  enableScrolling() {
+    $('body').removeClass('no-scroll');
+  }
+
   closePflanze() {
     $(CONFIG.SELECTORS.PFLANZE_CIRCLES).removeClass(`${CONFIG.CSS_CLASSES.FULLSCREEN} ${CONFIG.CSS_CLASSES.PLAYING}`);
     $(CONFIG.SELECTORS.PFLANZE_CLOSE_BUTTON).removeClass(CONFIG.CSS_CLASSES.VISIBLE);
@@ -178,6 +188,7 @@ class App {
     $(`.anweisung.nr${circleNumber}`).show();
     $(CONFIG.SELECTORS.ANWEISUNG_BOX).addClass(CONFIG.CSS_CLASSES.VISIBLE);
     $(CONFIG.SELECTORS.CLOSE_BUTTON).removeClass(CONFIG.CSS_CLASSES.ARROW_UP).addClass(CONFIG.CSS_CLASSES.ARROW_DOWN);
+    this.disableScrolling();
   }
 
   handlePflanzeClick(element) {
@@ -267,6 +278,7 @@ class App {
       if (!$(e.target).is(CONFIG.SELECTORS.CLOSE_BUTTON)) {
         $(CONFIG.SELECTORS.ANWEISUNG_BOX).removeClass(CONFIG.CSS_CLASSES.VISIBLE);
         $(CONFIG.SELECTORS.CLOSE_BUTTON).removeClass(CONFIG.CSS_CLASSES.ARROW_DOWN).addClass(CONFIG.CSS_CLASSES.ARROW_UP);
+        this.enableScrolling();
       }
     });
 
@@ -274,6 +286,7 @@ class App {
       e.stopPropagation();
       $(CONFIG.SELECTORS.ANWEISUNG_BOX).removeClass(CONFIG.CSS_CLASSES.VISIBLE);
       $(CONFIG.SELECTORS.CLOSE_BUTTON).removeClass(CONFIG.CSS_CLASSES.ARROW_DOWN).addClass(CONFIG.CSS_CLASSES.ARROW_UP);
+      this.enableScrolling();
     });
 
     // Pflanze events
@@ -299,6 +312,7 @@ class App {
     // GPS button events
     $(document).on('click', '#gpsUpdateBtn', () => this.handleGPSUpdate());
     $(document).on('click', '#gpsTrackingBtn', () => this.handleTrackingToggle());
+    $(document).on('click', '#gpsTestingBtn', () => this.handleTestingToggle());
 
     // Window resize
     $(window).resize(() => {
@@ -342,6 +356,77 @@ class App {
       if (this.gpsManager.startTracking()) {
         this.showGPSStatus('GPS-Tracking wird gestartet...', 'loading');
       }
+    }
+  }
+
+  handleTestingToggle() {
+    const btn = $('#gpsTestingBtn');
+    const status = this.gpsManager.getTestingStatus();
+
+    if (status.enabled) {
+      // Disable testing mode
+      this.gpsManager.disableTestingMode();
+      btn.removeClass('active').text('🧪 Test Mode');
+      $('#gpsTestingControls').hide();
+      this.showGPSStatus('Test-Modus deaktiviert', 'success');
+    } else {
+      // Enable testing mode
+      btn.addClass('loading').text('🔄 Aktiviere...');
+      this.showGPSStatus('Test-Modus wird aktiviert...', 'loading');
+
+      this.gpsManager.enableTestingMode()
+        .then(result => {
+          btn.removeClass('loading').addClass('active').text('🧪 Test Aktiv');
+          this.showGPSStatus('Test-Modus aktiviert', 'success');
+          this.createTestingControls();
+        })
+        .catch(error => {
+          btn.removeClass('loading').text('🧪 Test Mode');
+          this.showGPSStatus('Test-Modus Fehler: ' + error.message, 'error');
+        });
+    }
+  }
+
+  createTestingControls() {
+    const controlsContainer = $('#gpsTestingControls');
+    controlsContainer.empty();
+
+    const controlsHTML = `
+      <div class="testing-controls-content">
+        <h4>GPS Test-Modus</h4>
+        <p>Wähle einen Marker zum Testen:</p>
+        <div class="marker-buttons">
+          ${CONFIG.GPS_MARKERS.map(marker => 
+            `<button class="test-marker-btn" data-marker="${marker.id}">${marker.id}</button>`
+          ).join('')}
+        </div>
+        <button id="refreshTestGPS" class="refresh-test-btn">📍 Position Aktualisieren</button>
+      </div>
+    `;
+
+    controlsContainer.html(controlsHTML).show();
+
+    // Bind events for testing controls
+    $('.test-marker-btn').on('click', (e) => {
+      const markerId = $(e.target).data('marker');
+      this.setTestMarker(markerId);
+    });
+
+    $('#refreshTestGPS').on('click', () => {
+      this.handleGPSUpdate();
+    });
+  }
+
+  setTestMarker(markerId) {
+    if (this.gpsManager.setTestCoordinateToMarker(markerId)) {
+      $('.test-marker-btn').removeClass('active');
+      $(`.test-marker-btn[data-marker="${markerId}"]`).addClass('active');
+      this.showGPSStatus(`Test-Position: ${markerId}`, 'success');
+      
+      // Auto-refresh GPS to show new position
+      setTimeout(() => {
+        this.handleGPSUpdate();
+      }, 500);
     }
   }
 
