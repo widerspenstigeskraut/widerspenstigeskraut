@@ -277,7 +277,6 @@ class App {
         $(window).resize(() => {
             if (this.isMobile()) {
                 this.currentBackgroundPos = {x: 0, y: 0};
-                $(CONFIG.SELECTORS.FULLSIZE_IMAGE, '.karte').css('transform', 'translateX(0px)');
                 setTimeout(() => {
                     this.saveOriginalRedCirclePositions();
                 }, 100);
