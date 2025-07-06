@@ -284,8 +284,7 @@
     left: 20px;
     z-index: 999;
     padding: 10px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
+    color: purple;
     border-radius: 6px;
     font-size: 11px;
     font-family: monospace;
@@ -294,6 +293,7 @@
     transform: translateY(10px);
     transition: all 0.3s ease;
     pointer-events: none;
+    mix-blend-mode: difference;
 }
 
 .gps-coordinates.visible {
@@ -308,14 +308,12 @@
     right: 20px;
     z-index: 1000;
     padding: 10px;
-    background: #17a2b8;
     color: white;
     border: none;
     border-radius: 50%;
     width: 50px;
     height: 50px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
     transition: all 0.3s ease;
     font-size: 16px;
     display: flex;
@@ -382,18 +380,5 @@
 (min-resolution: 192dpi) {
     .gps-user-dot {
         box-shadow: 0 0 15px rgba(0, 123, 255, 0.6);
-    }
-}
-
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-    .gps-status {
-        background: rgba(255, 255, 255, 0.9);
-        color: #000;
-    }
-
-    .gps-coordinates {
-        background: rgba(255, 255, 255, 0.9);
-        color: #000;
     }
 }

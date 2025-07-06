@@ -50,9 +50,9 @@ class App {
 
     initGPSFeatures() {
         let body = $('body');
-        body.append('<button id="gpsUpdateBtn" class="gps-update-button">📍 GPS Update</button>');
-        body.append('<button id="gpsTrackingBtn" class="gps-tracking-toggle">🎯</button>');
-        body.append('<button id="gpsTestingBtn" class="gps-testing-toggle">🧪 Test Mode</button>');
+        body.append('<button id="gpsUpdateBtn" class="gps-update-button">GPS Update</button>');
+        body.append('<button id="gpsTrackingBtn" class="gps-tracking-toggle">👽</button>');
+        body.append('<button id="gpsTestingBtn" class="gps-testing-toggle">Test Mode</button>');
         body.append('<div id="gpsStatus" class="gps-status"></div>');
         body.append('<div id="gpsCoordinates" class="gps-coordinates"></div>');
 
@@ -99,7 +99,6 @@ class App {
         const coordEl = $('#gpsCoordinates');
         coordEl.html(`
       GPS: ${data.lat.toFixed(6)}, ${data.lng.toFixed(6)}<br>
-      Karte: ${data.vhPos.x.toFixed(1)}vh, ${data.vhPos.y.toFixed(1)}vh<br>
       Genauigkeit: ±${data.accuracy ? data.accuracy.toFixed(0) + 'm' : 'unbekannt'}
     `).addClass('visible');
     }
@@ -278,19 +277,19 @@ class App {
 
     handleGPSUpdate() {
         const btn = $('#gpsUpdateBtn');
-        btn.addClass('loading').text('🔄 GPS...');
+        btn.addClass('loading').text('GPS...');
         this.showGPSStatus('GPS-Position wird ermittelt...', 'loading');
 
         this.gpsManager.getCurrentLocation()
             .then(result => {
-                btn.removeClass('loading').addClass('success').text('✅ GPS OK');
+                btn.removeClass('loading').addClass('success').text('GPS OK');
                 this.showGPSStatus(`Position erhalten (±${result.accuracy.toFixed(0)}m)`, 'success');
                 setTimeout(() => {
                     btn.removeClass('success').text('📍 GPS Update');
                 }, 2000);
             })
             .catch(error => {
-                btn.removeClass('loading').addClass('error').text('❌ GPS Fehler');
+                btn.removeClass('loading').addClass('error').text('GPS Fehler');
                 this.showGPSStatus('GPS-Fehler: ' + error.message, 'error');
                 setTimeout(() => {
                     btn.removeClass('error').text('📍 GPS Update');
@@ -315,11 +314,11 @@ class App {
         if (status.enabled) {
             // Disable testing mode
             this.gpsManager.disableTestingMode();
-            btn.removeClass('active').text('🧪 Test Mode');
+            btn.removeClass('active').text('Test Mode');
             this.showGPSStatus('Test-Modus deaktiviert', 'success');
         } else {
             // Enable testing mode
-            btn.addClass('loading').text('🔄 Setze Position...');
+            btn.addClass('loading').text('Setze Position...');
             this.showGPSStatus('Aktuelle Position wird auf ersten Marker gemappt...', 'loading');
 
             this.gpsManager.enableTestingMode()
@@ -333,7 +332,7 @@ class App {
                     }, 500);
                 })
                 .catch(error => {
-                    btn.removeClass('loading').text('🧪 Test Mode');
+                    btn.removeClass('loading').text('Test Mode');
                     this.showGPSStatus('Test-Modus Fehler: ' + error.message, 'error');
                 });
         }
