@@ -903,7 +903,7 @@ class GPSMapper {
         return new Promise((resolve) => {
             // Use reference points at index 3 and 5 (the new reference points)
             const startRef = this.referencePoints[3];  // Index 3: {lat: 51.491918, lng: 11.957036, x: 40, y: 17}
-            const endRef = this.referencePoints[5];    // Index 5: {lat: 51.490472, lng: 11.957832, x: 155, y: 14}
+            const endRef = this.referencePoints[4];    // Index 5: {lat: 51.490472, lng: 11.957832, x: 155, y: 14}
             
             // Setup simulated walk between reference points 3 and 5
             this.simulatedWalk.startPoint = {
