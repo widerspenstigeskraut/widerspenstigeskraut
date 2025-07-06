@@ -153,10 +153,9 @@ class GPSMapper {
      * Konvertiert GPS-Genauigkeit (Meter) zu vh für Anzeige
      */
     accuracyToVH(accuracyMeters) {
-        // Grobe Schätzung: 1vh ≈ 10-50 Meter je nach Zoom-Level
-        // Diese Werte müssen je nach Karten-Maßstab angepasst werden
-        const metersPerVH = 20; // Anpassung erforderlich!
-        return Math.min(Math.max(accuracyMeters / metersPerVH, 1), 20); // Min 1vh, Max 20vh
+        // 100vh = 135 meters, also 1vh = 1.35 meters
+        const metersPerVH = 1.35;
+        return Math.min(Math.max(accuracyMeters / metersPerVH, 0.5), 50); // Min 0.5vh, Max 50vh
     }
 
     /**
@@ -230,9 +229,18 @@ class GPSMapper {
 
         this.watchId = navigator.geolocation.watchPosition(
             (position) => {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
+                let lat = position.coords.latitude;
+                let lng = position.coords.longitude;
                 const accuracy = position.coords.accuracy;
+
+                // Apply test offset if testing mode is enabled
+                if (window.CONFIG && window.CONFIG.GPS_TESTING.ENABLED) {
+                    lat += window.CONFIG.GPS_TESTING.TEST_OFFSET.lat;
+                    lng += window.CONFIG.GPS_TESTING.TEST_OFFSET.lng;
+                    console.log(`GPS-Tracking (Test): ${lat.toFixed(6)}, ${lng.toFixed(6)} [OFFSET]`);
+                } else {
+                    console.log(`GPS-Tracking: ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
+                }
 
                 this.showUserPosition(lat, lng, accuracy);
             },
