@@ -18,15 +18,11 @@ class GPSMapper {
      * WICHTIG: Diese Koordinaten müssen durch echte GPS-Koordinaten ersetzt werden
      */
     initReferencePoints() {
-        // TODO: Ersetze diese Beispiel-Koordinaten durch deine echten GPS-Koordinaten
         const referencePoints = [
             // Format: { lat: GPS_LATITUDE, lng: GPS_LONGITUDE, x: VH_X, y: VH_Y }
-            { lat: 51.492040, lng: 11.956024, x: 15, y: 55 },  // Beispiel für redCircle1
-            { lat: 51.49155, lng: 11.956043, x: 50, y: 65 },  // Beispiel für redCircle2s
-            { lat: 51.4624, lng: 11.9685, x: 105, y: 80 }, // Beispiel für redCircle3
-            { lat: 51.4654, lng: 11.9715, x: 110, y: 30 }, // Beispiel für magic3
-            { lat: 51.4638, lng: 11.9688, x: 55, y: 67 },  // Beispiel für pflanze1
-            { lat: 51.4628, lng: 11.9678, x: 18, y: 65 },  // Beispiel für pflanze2
+            {lat: 51.492060, lng: 11.956057, x: 15, y: 55},  // Beispiel für redCircle1
+            {lat: 51.491434, lng: 11.956762, x: 50, y: 65},  // Beispiel für redCircle2s
+            {lat: 51.490917, lng: 11.956818, x: 105, y: 80}, // Beispiel für redCircle3
         ];
 
         referencePoints.forEach(point => {
@@ -40,7 +36,7 @@ class GPSMapper {
      * Fügt einen Referenzpunkt hinzu
      */
     addReferencePoint(lat, lng, x, y) {
-        this.referencePoints.push({ lat, lng, x, y });
+        this.referencePoints.push({lat, lng, x, y});
     }
 
     /**
@@ -114,12 +110,12 @@ class GPSMapper {
             $('.hintergrund').append(userMarker);
 
             // Position speichern
-            this.currentPosition = { lat, lng, x: vhPos.x, y: vhPos.y, accuracy };
+            this.currentPosition = {lat, lng, x: vhPos.x, y: vhPos.y, accuracy};
 
             console.log(`User Position: GPS(${lat.toFixed(6)}, ${lng.toFixed(6)}) -> VH(${vhPos.x.toFixed(1)}, ${vhPos.y.toFixed(1)})`);
 
             // Event für Positionsupdate feuern
-            this.triggerPositionUpdate({ lat, lng, vhPos, accuracy });
+            this.triggerPositionUpdate({lat, lng, vhPos, accuracy});
 
             return vhPos;
         } catch (error) {
@@ -194,7 +190,7 @@ class GPSMapper {
                     }
 
                     const vhPos = this.showUserPosition(lat, lng, accuracy);
-                    const result = { lat, lng, accuracy, vhPos, testing: window.CONFIG?.GPS_TESTING.ENABLED || false };
+                    const result = {lat, lng, accuracy, vhPos, testing: window.CONFIG?.GPS_TESTING.ENABLED || false};
                     resolve(result);
                 },
                 (error) => {
@@ -429,7 +425,7 @@ class GPSMapper {
         if (window.CONFIG) {
             window.CONFIG.GPS_TESTING.ENABLED = false;
             window.CONFIG.GPS_TESTING.REAL_LOCATION = null;
-            window.CONFIG.GPS_TESTING.TEST_OFFSET = { lat: 0, lng: 0 };
+            window.CONFIG.GPS_TESTING.TEST_OFFSET = {lat: 0, lng: 0};
             console.log('GPS-Testing-Modus deaktiviert');
             return true;
         }
@@ -440,7 +436,7 @@ class GPSMapper {
      * Gibt den aktuellen Testing-Status zurück
      */
     getTestingStatus() {
-        if (!window.CONFIG) return { enabled: false };
+        if (!window.CONFIG) return {enabled: false};
 
         return {
             enabled: window.CONFIG.GPS_TESTING.ENABLED,

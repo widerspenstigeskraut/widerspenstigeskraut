@@ -35,6 +35,8 @@
     background: rgba(0, 123, 255, 0.1);
     pointer-events: none;
     z-index: 24;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
     animation: gpsAccuracyPulse 3s infinite ease-in-out;
 }
@@ -82,7 +84,7 @@
     right: 20px;
     z-index: 1000;
     padding: 12px 16px;
-    background: #007bff;
+    background: #67ff00;
     color: white;
     border: none;
     border-radius: 8px;

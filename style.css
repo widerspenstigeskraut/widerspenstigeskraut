@@ -258,15 +258,10 @@ body.no-scroll {
     font-family: 'Ouroboros';
 }
 
-.anweisungsbox.visible {
-    top: 0;
-    /* Fährt in die sichtbare Position */
-}
-
 /* Rote Kreise ausblenden wenn Anweisungsbox sichtbar ist */
-.anweisungsbox.visible ~ .map-point {
+/*.anweisungsbox.visible ~ .map-point {
     display: none;
-}
+}*/
 
 .close-button {
     position: absolute;
