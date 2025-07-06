@@ -277,9 +277,6 @@ class App {
         $(window).resize(() => {
             if (this.isMobile()) {
                 this.currentBackgroundPos = {x: 0, y: 0};
-                setTimeout(() => {
-                    this.saveOriginalRedCirclePositions();
-                }, 100);
             }
         });
     }
@@ -349,19 +346,10 @@ class App {
 
     handleMobileSetup() {
         if (this.isMobile()) {
-            setTimeout(() => {
-                this.saveOriginalRedCirclePositions();
-            }, 100);
+            // Mobile setup if needed
         }
     }
 
-    saveOriginalRedCirclePositions() {
-        $(CONFIG.SELECTORS.MAP_POINTS).each((index, element) => {
-            const position = $(element).position();
-            $(element).data('original-top', position.top);
-            $(element).data('original-left', position.left);
-        });
-    }
 
     autoStartGPS() {
         if (this.gpsManager.isGPSAvailable()) {
