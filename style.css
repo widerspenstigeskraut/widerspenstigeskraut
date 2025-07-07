@@ -481,7 +481,7 @@ img {
     font-size: 25px;
     line-height: 1.1;
     -webkit-text-stroke: 1.3px rgb(0, 0, 0);
-    filter: drop-shadow(0px 0px 10px rgba(0, 255, 76, 0.541));
+    filter: drop-shadow(0px 0px 20px rgb(255, 255, 255));
     width: 90%;
     margin-bottom: 20px;
     /* text-align: center; */
