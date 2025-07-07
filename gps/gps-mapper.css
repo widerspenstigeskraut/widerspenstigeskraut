@@ -285,7 +285,7 @@
     position: fixed;
     top: 5px;
     right: 5px;
-    z-index: 999;
+    z-index: 50;
     padding: 5px;
     color: purple;
     border-radius: 6px;
@@ -347,7 +347,7 @@
 }
 
 /* Responsive Anpassungen */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .gps-update-button {
         bottom: 15px;
         right: 15px;
@@ -376,7 +376,7 @@
         left: 15px;
         font-size: 10px;
     }
-}
+} */
 
 /* High-DPI Displays */
 @media (-webkit-min-device-pixel-ratio: 2),

@@ -4,6 +4,7 @@ class App {
         this.currentBackgroundPos = { x: 0, y: 0 };
         this.audioManager = new AudioManager();
         this.gpsManager = this.initGPSManager();
+        this.isStarted = false; // Neuer Status-Flag
 
         this.init();
     }
@@ -12,7 +13,8 @@ class App {
         this.initGPSFeatures();
         this.bindEvents();
         this.handleMobileSetup();
-        this.autoStartGPS();
+        this.showStartOverlay(); // Start-Overlay anzeigen
+        // GPS wird erst nach dem Start initialisiert
     }
 
     initGPSManager() {
@@ -83,6 +85,26 @@ class App {
     `).addClass('visible');
     }
 
+    showStartOverlay() {
+        // Start-Overlay anzeigen und alle Interaktionen blockieren
+        this.disableScrolling();
+        $('.map-point').addClass('disabled-while-anweisung'); // Alle Map-Points deaktivieren
+        $('#startOverlay').show(); // Falls es im CSS versteckt ist
+    }
+
+    hideStartOverlay() {
+        const overlay = $('#startOverlay');
+        overlay.addClass('hidden');
+
+        // Nach der Transition alles aktivieren
+        setTimeout(() => {
+            this.enableScrolling();
+            $('.map-point').removeClass('disabled-while-anweisung');
+            this.isStarted = true;
+            this.autoStartGPS(); // GPS erst nach dem Start aktivieren
+        }, 1000); // Wartezeit entspricht der CSS-Transition
+    }
+
     disableScrolling() {
         $('body').addClass('no-scroll');
     }
@@ -114,6 +136,9 @@ class App {
     }
 
     handleRedCircleClick(circleNumber) {
+        // Nicht reagieren wenn noch nicht gestartet
+        if (!this.isStarted) return;
+
         // Alle aktiven Map-Points schließen und Play/Pause-Button verstecken
         this.closeAllMapPoints();
 
@@ -137,6 +162,9 @@ class App {
     }
 
     handlePflanzeClick(element) {
+        // Nicht reagieren wenn noch nicht gestartet
+        if (!this.isStarted) return;
+
         const audioFile = element.getAttribute('data-audio');
         const clickedElement = $(element);
 
@@ -176,6 +204,9 @@ class App {
     }
 
     handleMagicClick(element) {
+        // Nicht reagieren wenn noch nicht gestartet
+        if (!this.isStarted) return;
+
         const audioFile = element.getAttribute('data-audio');
         const clickedElement = $(element);
 
@@ -312,6 +343,12 @@ class App {
         $(document).on('click', '#gpsUpdateBtn', () => this.handleGPSUpdate());
         $(document).on('click', '#gpsTrackingBtn', () => this.handleTrackingToggle());
         $(document).on('click', '#gpsTestingBtn', () => this.handleTestingToggle());
+
+        // Start button event
+        $(document).on('click touchend', '#startButton', (e) => {
+            e.stopPropagation();
+            this.hideStartOverlay();
+        });
 
         // Audio play/pause button event
         $(document).on('click touchend', '#audioPlayPauseBtn', (e) => {
