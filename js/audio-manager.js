@@ -30,6 +30,11 @@ class AudioManager {
       this.currentSVGAudio.currentTime = 0;
       this.currentSVGAudio = null;
       this.isPaused = false;
+
+      // Animation stoppen für Magic-Elemente
+      if (this.currentPlayingElement && this.currentPlayingElement.hasClass('magic')) {
+        this.currentPlayingElement.removeClass('playing paused').addClass('stopped');
+      }
     }
   }
 
@@ -39,6 +44,11 @@ class AudioManager {
       this.currentPflanzeAudio.currentTime = 0;
       this.currentPflanzeAudio = null;
       this.isPaused = false;
+
+      // Shadow entfernen für Pflanzen-Elemente
+      if (this.currentPlayingElement && this.currentPlayingElement.hasClass('pflanze')) {
+        this.currentPlayingElement.removeClass('playing paused').addClass('stopped');
+      }
     }
   }
 
@@ -46,10 +56,22 @@ class AudioManager {
     if (this.currentPflanzeAudio && !this.currentPflanzeAudio.paused) {
       this.currentPflanzeAudio.pause();
       this.isPaused = true;
+
+      // Shadow entfernen für Pflanzen-Elemente
+      if (this.currentPlayingElement && this.currentPlayingElement.hasClass('pflanze')) {
+        this.currentPlayingElement.removeClass('playing').addClass('paused');
+      }
+
       return true;
     } else if (this.currentSVGAudio && !this.currentSVGAudio.paused) {
       this.currentSVGAudio.pause();
       this.isPaused = true;
+
+      // Animation pausieren für Magic-Elemente
+      if (this.currentPlayingElement && this.currentPlayingElement.hasClass('magic')) {
+        this.currentPlayingElement.removeClass('playing').addClass('paused');
+      }
+
       return true;
     } else if (this.currentAudio && !this.currentAudio.paused) {
       this.currentAudio.pause();
@@ -64,10 +86,22 @@ class AudioManager {
       if (this.currentPflanzeAudio && this.currentPflanzeAudio.paused) {
         this.currentPflanzeAudio.play();
         this.isPaused = false;
+
+        // Shadow wieder anzeigen für Pflanzen-Elemente
+        if (this.currentPlayingElement && this.currentPlayingElement.hasClass('pflanze')) {
+          this.currentPlayingElement.removeClass('paused').addClass('playing');
+        }
+
         return true;
       } else if (this.currentSVGAudio && this.currentSVGAudio.paused) {
         this.currentSVGAudio.play();
         this.isPaused = false;
+
+        // Animation fortsetzen für Magic-Elemente
+        if (this.currentPlayingElement && this.currentPlayingElement.hasClass('magic')) {
+          this.currentPlayingElement.removeClass('paused').addClass('playing');
+        }
+
         return true;
       } else if (this.currentAudio && this.currentAudio.paused) {
         this.currentAudio.play();
@@ -109,18 +143,18 @@ class AudioManager {
 
       this.currentPflanzeAudio.addEventListener('play', () => {
         console.log('Audio wird abgespielt');
-        element.addClass('playing');
+        element.removeClass('paused stopped').addClass('playing');
         this.isPaused = false;
       });
 
       this.currentPflanzeAudio.addEventListener('pause', () => {
         console.log('Audio pausiert');
-        // Don't remove playing class when paused, only when stopped
+        // Shadow wird über pauseCurrentAudio() gesteuert
       });
 
       this.currentPflanzeAudio.addEventListener('ended', () => {
         console.log('Audio beendet');
-        element.removeClass('playing');
+        element.removeClass('playing paused').addClass('stopped');
         this.currentPflanzeAudio = null;
         this.currentPlayingElement = null;
         this.isPaused = false;
@@ -130,7 +164,7 @@ class AudioManager {
       this.currentPflanzeAudio.addEventListener('error', (e) => {
         console.error('Audio-Fehler:', e);
         console.error('Fehler-Details:', this.currentPflanzeAudio.error);
-        element.removeClass('playing');
+        element.removeClass('playing paused').addClass('stopped');
         this.currentPflanzeAudio = null;
         this.currentPlayingElement = null;
         this.isPaused = false;
@@ -144,7 +178,7 @@ class AudioManager {
         })
         .catch(e => {
           console.error('Audio konnte nicht abgespielt werden:', e);
-          element.removeClass('playing');
+          element.removeClass('playing paused').addClass('stopped');
           this.currentPflanzeAudio = null;
           this.currentPlayingElement = null;
           this.isPaused = false;
@@ -184,18 +218,18 @@ class AudioManager {
 
       this.currentSVGAudio.addEventListener('play', () => {
         console.log('Magic-Audio wird abgespielt');
-        element.addClass('playing');
+        element.removeClass('paused stopped').addClass('playing');
         this.isPaused = false;
       });
 
       this.currentSVGAudio.addEventListener('pause', () => {
         console.log('Magic-Audio pausiert');
-        // Don't remove playing class when paused, only when stopped
+        // Animation wird über pauseCurrentAudio() gesteuert
       });
 
       this.currentSVGAudio.addEventListener('ended', () => {
         console.log('Magic-Audio beendet');
-        element.removeClass('playing');
+        element.removeClass('playing paused').addClass('stopped');
         this.currentSVGAudio = null;
         this.currentPlayingElement = null;
         this.isPaused = false;
@@ -205,7 +239,7 @@ class AudioManager {
       this.currentSVGAudio.addEventListener('error', (e) => {
         console.error('Magic-Audio-Fehler:', e);
         console.error('Fehler-Details:', this.currentSVGAudio.error);
-        element.removeClass('playing');
+        element.removeClass('playing paused').addClass('stopped');
         this.currentSVGAudio = null;
         this.currentPlayingElement = null;
         this.isPaused = false;
@@ -219,7 +253,7 @@ class AudioManager {
         })
         .catch(e => {
           console.error('Magic-Audio konnte nicht abgespielt werden:', e);
-          element.removeClass('playing');
+          element.removeClass('playing paused').addClass('stopped');
           this.currentSVGAudio = null;
           this.currentPlayingElement = null;
           this.isPaused = false;

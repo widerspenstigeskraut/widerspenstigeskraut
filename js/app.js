@@ -91,21 +91,32 @@ class App {
         $('body').removeClass('no-scroll');
     }
 
-    closePflanze() {
+    closeAllMapPoints() {
+        // Alle Pflanzen schließen
         $(CONFIG.SELECTORS.PFLANZE_CIRCLES).removeClass(`${CONFIG.CSS_CLASSES.FULLSCREEN} ${CONFIG.CSS_CLASSES.PLAYING}`);
         $(CONFIG.SELECTORS.PFLANZE_CLOSE_BUTTON).removeClass(CONFIG.CSS_CLASSES.VISIBLE);
-        this.audioManager.stopPflanzeAudio();
+
+        // Alle Magic-Kreise schließen
+        $(CONFIG.SELECTORS.MAGIC_CIRCLES).removeClass(`${CONFIG.CSS_CLASSES.FULLSCREEN} ${CONFIG.CSS_CLASSES.PLAYING}`);
+        $('#magicCloseButton').removeClass(CONFIG.CSS_CLASSES.VISIBLE);
+
+        // Alle Audios stoppen
+        this.audioManager.stopAllAudio();
         this.hidePlayPauseButton();
+    }
+
+    closePflanze() {
+        this.closeAllMapPoints();
     }
 
     closeMagic() {
-        $(CONFIG.SELECTORS.MAGIC_CIRCLES).removeClass(`${CONFIG.CSS_CLASSES.FULLSCREEN} ${CONFIG.CSS_CLASSES.PLAYING}`);
-        $('#magicCloseButton').removeClass(CONFIG.CSS_CLASSES.VISIBLE);
-        this.audioManager.stopSVGAudio();
-        this.hidePlayPauseButton();
+        this.closeAllMapPoints();
     }
 
     handleRedCircleClick(circleNumber) {
+        // Alle aktiven Map-Points schließen und Play/Pause-Button verstecken
+        this.closeAllMapPoints();
+
         $('.anweisung').hide();
         $(`.anweisung.nr${circleNumber}`).show();
         $(CONFIG.SELECTORS.ANWEISUNG_BOX).addClass(CONFIG.CSS_CLASSES.VISIBLE);
@@ -132,12 +143,12 @@ class App {
         console.log('Pflanze geklickt:', clickedElement.attr('id'), 'Audio:', audioFile);
 
         if (clickedElement.hasClass(CONFIG.CSS_CLASSES.FULLSCREEN)) {
-            this.closePflanze();
+            this.closeAllMapPoints();
             return;
         }
 
-        $(CONFIG.SELECTORS.PFLANZE_CIRCLES).removeClass(`${CONFIG.CSS_CLASSES.FULLSCREEN} ${CONFIG.CSS_CLASSES.PLAYING}`);
-        this.audioManager.stopPflanzeAudio();
+        // ALLE anderen Map-Points schließen bevor neuer geöffnet wird
+        this.closeAllMapPoints();
 
         clickedElement.addClass(CONFIG.CSS_CLASSES.FULLSCREEN);
         $(CONFIG.SELECTORS.PFLANZE_CLOSE_BUTTON).addClass(CONFIG.CSS_CLASSES.VISIBLE);
@@ -147,19 +158,19 @@ class App {
             this.audioManager.playPflanzeAudio(audioFile, clickedElement)
                 .then(() => {
                     setTimeout(() => {
-                        this.closePflanze();
+                        this.closeAllMapPoints();
                     }, CONFIG.AUTO_CLOSE_DELAY);
                 })
                 .catch(() => {
                     clickedElement.addClass(CONFIG.CSS_CLASSES.PLAYING);
                     setTimeout(() => {
-                        this.closePflanze();
+                        this.closeAllMapPoints();
                     }, CONFIG.AUDIO_ERROR_FALLBACK_DURATION);
                 });
         } else {
             clickedElement.addClass(CONFIG.CSS_CLASSES.PLAYING);
             setTimeout(() => {
-                this.closePflanze();
+                this.closeAllMapPoints();
             }, CONFIG.AUDIO_ERROR_FALLBACK_DURATION);
         }
     }
@@ -171,12 +182,12 @@ class App {
         console.log('Magic-Kreis geklickt:', clickedElement.attr('id'), 'Audio:', audioFile);
 
         if (clickedElement.hasClass(CONFIG.CSS_CLASSES.FULLSCREEN)) {
-            this.closeMagic();
+            this.closeAllMapPoints();
             return;
         }
 
-        $(CONFIG.SELECTORS.MAGIC_CIRCLES).removeClass(`${CONFIG.CSS_CLASSES.FULLSCREEN} ${CONFIG.CSS_CLASSES.PLAYING}`);
-        this.audioManager.stopSVGAudio();
+        // ALLE anderen Map-Points schließen bevor neuer geöffnet wird
+        this.closeAllMapPoints();
 
         clickedElement.addClass(CONFIG.CSS_CLASSES.FULLSCREEN);
         $('#magicCloseButton').addClass(CONFIG.CSS_CLASSES.VISIBLE);
@@ -186,19 +197,19 @@ class App {
             this.audioManager.playMagicAudio(audioFile, clickedElement)
                 .then(() => {
                     setTimeout(() => {
-                        this.closeMagic();
+                        this.closeAllMapPoints();
                     }, CONFIG.AUTO_CLOSE_DELAY);
                 })
                 .catch(() => {
                     clickedElement.addClass(CONFIG.CSS_CLASSES.PLAYING);
                     setTimeout(() => {
-                        this.closeMagic();
+                        this.closeAllMapPoints();
                     }, CONFIG.AUDIO_ERROR_FALLBACK_DURATION);
                 });
         } else {
             clickedElement.addClass(CONFIG.CSS_CLASSES.PLAYING);
             setTimeout(() => {
-                this.closeMagic();
+                this.closeAllMapPoints();
             }, CONFIG.AUDIO_ERROR_FALLBACK_DURATION);
         }
     }
@@ -247,7 +258,7 @@ class App {
             this.closeAnweisungsbox();
         });
 
-        // Close anweisungsbox and audio control strip when clicking anywhere on the body
+        // Close anweisungsbox und alle map-points when clicking anywhere on the body
         $('body').on('click touchend', (e) => {
             // Only close if anweisungsbox is visible and click is not on anweisungsbox itself
             if ($(CONFIG.SELECTORS.ANWEISUNG_BOX).hasClass(CONFIG.CSS_CLASSES.VISIBLE) &&
@@ -255,11 +266,11 @@ class App {
                 this.closeAnweisungsbox();
             }
 
-            // Close audio control strip when clicking anywhere (but not on the strip itself)
+            // Close audio control strip und alle map-points when clicking anywhere (but not on the strip itself)
             if ($('#audioControlStrip').hasClass('visible') &&
-                !$(e.target).closest('#audioControlStrip').length) {
-                this.hidePlayPauseButton();
-                this.audioManager.stopAllAudio();
+                !$(e.target).closest('#audioControlStrip').length &&
+                !$(e.target).closest('.map-point').length) { // Wichtig: nicht bei map-point clicks schließen
+                this.closeAllMapPoints(); // Neue Methode verwenden
             }
         });
 
