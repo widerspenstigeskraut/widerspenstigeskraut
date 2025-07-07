@@ -501,25 +501,26 @@ img {
     font-family: 'Ouroboros';
 }
 
-/* SVG-Pfeil-Button */
+/* SVG-Pfeil-Button mit Pulsing-Animation */
 .svg-arrow-button {
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
     margin: 0 auto 30px auto;
-    /* Zentriert und Abstand nach unten */
     display: block;
     transition: all 0.3s ease;
     width: 30dvh;
-    /* Anpassbare Größe */
     height: auto;
-    /* Anpassbare Größe */
+    /* Pulsing-Animation hinzugefügt */
+    animation: arrowPulse 3s infinite alternate ease-in-out;
 }
 
 .svg-arrow-button:hover {
     transform: translateY(-3px) scale(1.1);
     filter: drop-shadow(0 8px 15px rgba(150, 0, 215, 0.4));
+    /* Animation beim Hover pausieren (optional) */
+    animation-play-state: paused;
 }
 
 .svg-arrow-button:active {
@@ -531,7 +532,7 @@ img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    transition: all 0.3s ease;
+    transition: all 0.1s ease;
     filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.3));
 }
 
@@ -539,6 +540,16 @@ img {
     filter: drop-shadow(0 5px 15px rgba(150, 0, 215, 0.6));
 }
 
+/* Neue Pulse-Animation für den Pfeil (ohne blur) */
+@keyframes arrowPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.1);
+    }
+}
 
 
 /* SVG als img-Element */
