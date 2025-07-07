@@ -309,18 +309,18 @@ img {
 }
 
 #referencePoint1 {
-    top: 17dvh;
-    left: 40dvh;
+    top: 17svh;
+    left: 40svh;
 }
 
 #referencePoint2 {
-    top: 74.5dvh;
-    left: 91dvh;
+    top: 74.5svh;
+    left: 91svh;
 }
 
 #referencePoint3 {
-    top: 14dvh;
-    left: 155dvh;
+    top: 14svh;
+    left: 155svh;
 }
 
 .close-button {
@@ -472,7 +472,7 @@ img {
     top: 0;
     left: 0;
     width: 100dvw;
-    height: 100dvh;
+    height: 100svh;
     background-color: transparent;
     z-index: 200;
     display: flex;
@@ -525,7 +525,7 @@ img {
     margin: 0 auto 30px auto;
     display: block;
     transition: all 0.3s ease;
-    width: 30dvh;
+    width: 30svh;
     height: auto;
     /* Pulsing-Animation hinzugefügt */
     animation: arrowPulse 3s infinite alternate ease-in-out;
