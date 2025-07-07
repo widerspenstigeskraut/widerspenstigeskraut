@@ -1,111 +1,112 @@
 <!doctype html>
 <html lang="de">
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <title>Widerspenstiges Kraut</title>
-        <link href="./style.css" rel="stylesheet">
-        <link href="gps/gps-mapper.css" rel="stylesheet">
-    </head>
-
-    <body>
-        <!-- Hintergrund -->
-        <div class="hintergrund">
-            <div class="farbflaeche"></div>
-            <img src="img/hintergrund.jpg" class="textur">
-            <img src="img/karte.png" class="karte">
-        </div>
-
-        <!-- Kreise -->
-        <div class="map-point text" id="redCircle1">
-            <p>?</p>
-        </div>
-        <div class="map-point text" id="redCircle2">
-            <p>?</p>
-        </div>
-        <div class="map-point text" id="redCircle3">
-            <p>?</p>
-        </div>
-
-        <!-- Story -->
-        <div class="map-point magic" id="magic1" data-audio="sounds/sound1.mp3">
-            <p>o</p>
-        </div>
-
-        <div class="map-point magic" id="magic2" data-audio="sounds/sound1.mp3">
-            <p>o</p>
-        </div>
-
-        <div class="map-point magic" id="magic3" data-audio="sounds/sound1.mp3">
-            <p>o</p>
-        </div>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Widerspenstiges Kraut</title>
+    <link href="./style.css" rel="stylesheet">
+    <link href="gps/gps-mapper.css" rel="stylesheet">
+</head>
 
 
-        <!-- Pflanzen -->
-        <div class="map-point pflanze" id="pflanze1" data-audio="sounds/sound1.mp3">
-            <img src="img/lattich2.svg">
-        </div>
+<body>
+    <!-- Hintergrund -->
+    <div class="hintergrund">
+        <div class="farbflaeche"></div>
+        <img src="img/hintergrund.jpg" class="textur">
+        <img src="img/karte.png" class="karte">
+    </div>
 
-        <div class="map-point pflanze" id="pflanze2" data-audio="sounds/sound1.mp3">
-            <img src="img/loewenzahn2.svg">
-        </div>
-        <div class="map-point pflanze" id="pflanze3" data-audio="sounds/sound1.mp3">
-            <img src="img/spitzwegerich2.svg">
-        </div>
+    <!-- Kreise -->
+    <div class="map-point text" id="redCircle1">
+        <p>?</p>
+    </div>
+    <div class="map-point text" id="redCircle2">
+        <p>?</p>
+    </div>
+    <div class="map-point text" id="redCircle3">
+        <p>?</p>
+    </div>
 
-        <div class="map-point pflanze" id="pflanze4" data-audio="sounds/sound1.mp3">
-            <img src="img/brennessel2.svg">
-        </div>
-        <div class="map-point pflanze" id="pflanze5" data-audio="sounds/sound1.mp3">
-            <img src="img/lattich2.svg">
-        </div>
+    <!-- Story -->
+    <div class="map-point magic" id="magic1" data-audio="sounds/sound1.mp3">
+        <p>o</p>
+    </div>
 
-        <!-- Anweisungen -->
-        <div class="anweisungsbox" id="anweisungsbox">
-            <p class="anweisung nr1">
-                <span>D</span>u befindest dich auf dem Campus der Burg –<br>
-                vor dem Textil-Gebäude.<br><br>
-                Laufe umher.<br>
-                Bleibe einen Moment stehen.<br>
-                Nimm deine Umgebung bewusst wahr.<br><br>
-                Was siehst du?<br>
-                Gebäude? Beton?<br>
-                Schau auf deine Füße –<br> Wie sieht der Boden aus?<br>
-                Was verbirgt sich in den Ritzen und<br>
-                den Rillen des Asphalts?<br>
-                Was bewegt sich an den Rändern <br>deiner Wahrnehmung?
-            </p>
+    <div class="map-point magic" id="magic2" data-audio="sounds/sound1.mp3">
+        <p>o</p>
+    </div>
 
-            <p class="anweisung nr2">
-                <span>M</span>enschen wuseln umher<br>
-                Aber welche anderen Lebewesen verbergen<br>
-                sich noch auf dem Gelände?<br>
-                Was passiert wenn du deine Wahnehmung
-            </p>
+    <div class="map-point magic" id="magic3" data-audio="sounds/sound1.mp3">
+        <p>o</p>
+    </div>
 
-            <p class="anweisung nr3">
-                <span>W</span>o wachsen Pflanzen unkontrolliert?<br>
-                Widersetzen sich den angelegten Bereichen<br>
-                und vorgesehenen Orten?<br>
-                Erkämpfen sich ihren eigenen Raum?<br>
-            </p>
 
-            <!-- Close Button mit Pfeil -->
-            <button class="close-button" id="closeButton">↑</button>
-        </div>
+    <!-- Pflanzen -->
+    <div class="map-point pflanze" id="pflanze1" data-audio="sounds/sound1.mp3">
+        <img src="img/lattich2.svg">
+    </div>
 
-        <div id="referencePoint1" class="reference-point"></div>
-        <div id="referencePoint2" class="reference-point"></div>
-        <div id="referencePoint3" class="reference-point"></div>
+    <div class="map-point pflanze" id="pflanze2" data-audio="sounds/sound1.mp3">
+        <img src="img/loewenzahn2.svg">
+    </div>
+    <div class="map-point pflanze" id="pflanze3" data-audio="sounds/sound1.mp3">
+        <img src="img/spitzwegerich2.svg">
+    </div>
 
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'></script>
-        <script src="./gps/gps-mapper.js"></script>
-        <script src="./js/config.js"></script>
-        <script src="./js/audio-manager.js"></script>
-        <script src="./js/app.js"></script>
-        <script src="./script.js"></script>
-    </body>
+    <div class="map-point pflanze" id="pflanze4" data-audio="sounds/sound1.mp3">
+        <img src="img/brennessel2.svg">
+    </div>
+    <div class="map-point pflanze" id="pflanze5" data-audio="sounds/sound1.mp3">
+        <img src="img/lattich2.svg">
+    </div>
+
+    <!-- Anweisungen -->
+    <div class="anweisungsbox" id="anweisungsbox">
+        <p class="anweisung nr1">
+            <span>D</span>u befindest dich auf dem Campus der Burg –<br>
+            vor dem Textil-Gebäude.<br><br>
+            Laufe umher.<br>
+            Bleibe einen Moment stehen.<br>
+            Nimm deine Umgebung bewusst wahr.<br><br>
+            Was siehst du?<br>
+            Gebäude? Beton?<br>
+            Schau auf deine Füße –<br> Wie sieht der Boden aus?<br>
+            Was verbirgt sich in den Ritzen und<br>
+            den Rillen des Asphalts?<br>
+            Was bewegt sich an den Rändern <br>deiner Wahrnehmung?
+        </p>
+
+        <p class="anweisung nr2">
+            <span>M</span>enschen wuseln umher<br>
+            Aber welche anderen Lebewesen verbergen<br>
+            sich noch auf dem Gelände?<br>
+            Was passiert wenn du deine Wahnehmung
+        </p>
+
+        <p class="anweisung nr3">
+            <span>W</span>o wachsen Pflanzen unkontrolliert?<br>
+            Widersetzen sich den angelegten Bereichen<br>
+            und vorgesehenen Orten?<br>
+            Erkämpfen sich ihren eigenen Raum?<br>
+        </p>
+
+        <!-- Close Button mit Pfeil -->
+        <button class="close-button" id="closeButton">↑</button>
+    </div>
+
+    <div id="referencePoint1" class="reference-point"></div>
+    <div id="referencePoint2" class="reference-point"></div>
+    <div id="referencePoint3" class="reference-point"></div>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'></script>
+    <script src="./gps/gps-mapper.js"></script>
+    <script src="./js/config.js"></script>
+    <script src="./js/audio-manager.js"></script>
+    <script src="./js/app.js"></script>
+    <script src="./script.js"></script>
+</body>
 
 </html>
