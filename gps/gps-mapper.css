@@ -297,6 +297,7 @@
     transition: all 0.3s ease;
     pointer-events: none;
     mix-blend-mode: difference;
+    text-align: right;
 }
 
 .gps-coordinates.visible {
