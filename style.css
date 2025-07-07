@@ -48,7 +48,7 @@ body {
     user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
+    touch-action: auto;
 }
 
 body.no-scroll {
@@ -168,6 +168,7 @@ body.no-scroll {
         }
 
         /* Roter Shadow wenn Audio abgespielt wird */
+
         &.fullscreen.playing {
             filter: drop-shadow(0px 0px 10px rgb(255, 255, 255));
             transition: all 2s ease-in-out;
@@ -175,11 +176,13 @@ body.no-scroll {
         }
 
         /* Kein Shadow wenn pausiert */
+
         &.fullscreen.paused {
             filter: none;
         }
 
         /* Kein Shadow wenn gestoppt */
+
         &.fullscreen.stopped {
             filter: none;
         }
@@ -397,7 +400,6 @@ img {
 }
 
 .disabled-while-anweisung {
-    display: none;
     pointer-events: none;
     touch-action: none;
     -webkit-touch-callout: none;
@@ -406,9 +408,13 @@ img {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    opacity: 0.5;
+    opacity: 0.8;
     transition: opacity 0.3s ease;
     animation: none !important;
+}
+
+.map-point.text.disabled-while-anweisung {
+    opacity: 0;
 }
 
 /* Ensure anweisungsbox has higher z-index than map-points */

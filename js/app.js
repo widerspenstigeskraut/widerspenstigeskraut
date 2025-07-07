@@ -246,51 +246,56 @@ class App {
     }
 
     bindEvents() {
-        // Red circle click handlers
-        $('#redCircle1').on('click touchend', (e) => {
+        // Red circle click handlers - use proper touch detection
+        $('#redCircle1').on('click', (e) => {
             // Don't handle click if disabled while anweisungsbox is open
             if ($(e.currentTarget).hasClass('disabled-while-anweisung')) {
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }
+            e.preventDefault();
             e.stopPropagation(); // Prevent body click handler
             this.handleRedCircleClick(1);
         });
-        $('#redCircle2').on('click touchend', (e) => {
+        $('#redCircle2').on('click', (e) => {
             // Don't handle click if disabled while anweisungsbox is open
             if ($(e.currentTarget).hasClass('disabled-while-anweisung')) {
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }
+            e.preventDefault();
             e.stopPropagation(); // Prevent body click handler
             this.handleRedCircleClick(2);
         });
-        $('#redCircle3').on('click touchend', (e) => {
+        $('#redCircle3').on('click', (e) => {
             // Don't handle click if disabled while anweisungsbox is open
             if ($(e.currentTarget).hasClass('disabled-while-anweisung')) {
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }
+            e.preventDefault();
             e.stopPropagation(); // Prevent body click handler
             this.handleRedCircleClick(3);
         });
 
         // Anweisungsbox events - close on any click
-        $(CONFIG.SELECTORS.ANWEISUNG_BOX).on('click touchend', (e) => {
+        $(CONFIG.SELECTORS.ANWEISUNG_BOX).on('click', (e) => {
+            e.preventDefault();
             this.closeAnweisungsbox();
         });
 
         // Prevent close button from bubbling up
-        $(CONFIG.SELECTORS.CLOSE_BUTTON).on('click touchend', (e) => {
+        $(CONFIG.SELECTORS.CLOSE_BUTTON).on('click', (e) => {
+            e.preventDefault();
             e.stopPropagation();
             this.closeAnweisungsbox();
         });
 
         // Close anweisungsbox und alle map-points when clicking anywhere on the body
-        $('body').on('click touchend', (e) => {
+        $('body').on('click', (e) => {
             // Only close if anweisungsbox is visible and click is not on anweisungsbox itself
             if ($(CONFIG.SELECTORS.ANWEISUNG_BOX).hasClass(CONFIG.CSS_CLASSES.VISIBLE) &&
                 !$(e.target).closest(CONFIG.SELECTORS.ANWEISUNG_BOX).length) {
@@ -306,35 +311,39 @@ class App {
         });
 
         // Pflanze events
-        $(CONFIG.SELECTORS.PFLANZE_CIRCLES).on('click touchend', (e) => {
+        $(CONFIG.SELECTORS.PFLANZE_CIRCLES).on('click', (e) => {
             // Don't handle click if disabled while anweisungsbox is open
             if ($(e.currentTarget).hasClass('disabled-while-anweisung')) {
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }
+            e.preventDefault();
             e.stopPropagation(); // Prevent body click handler
             this.handlePflanzeClick(e.currentTarget);
         });
 
-        $(CONFIG.SELECTORS.PFLANZE_CLOSE_BUTTON).on('click touchend', (e) => {
+        $(CONFIG.SELECTORS.PFLANZE_CLOSE_BUTTON).on('click', (e) => {
+            e.preventDefault();
             e.stopPropagation();
             this.closePflanze();
         });
 
         // Magic circle events
-        $(CONFIG.SELECTORS.MAGIC_CIRCLES).on('click touchend', (e) => {
+        $(CONFIG.SELECTORS.MAGIC_CIRCLES).on('click', (e) => {
             // Don't handle click if disabled while anweisungsbox is open
             if ($(e.currentTarget).hasClass('disabled-while-anweisung')) {
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }
+            e.preventDefault();
             e.stopPropagation(); // Prevent body click handler
             this.handleMagicClick(e.currentTarget);
         });
 
-        $('#magicCloseButton').on('click touchend', (e) => {
+        $('#magicCloseButton').on('click', (e) => {
+            e.preventDefault();
             e.stopPropagation();
             this.closeMagic();
         });
@@ -345,13 +354,15 @@ class App {
         $(document).on('click', '#gpsTestingBtn', () => this.handleTestingToggle());
 
         // Start button event
-        $(document).on('click touchend', '#startButton', (e) => {
+        $(document).on('click', '#startButton', (e) => {
+            e.preventDefault();
             e.stopPropagation();
             this.hideStartOverlay();
         });
 
         // Audio play/pause button event
-        $(document).on('click touchend', '#audioPlayPauseBtn', (e) => {
+        $(document).on('click', '#audioPlayPauseBtn', (e) => {
+            e.preventDefault();
             e.stopPropagation(); // Verhindert, dass der body click handler ausgelöst wird
             this.handlePlayPauseToggle();
         });
