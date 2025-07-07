@@ -44,7 +44,7 @@ class GPSMapper {
         // NEW: Memory management
         this.memoryCleanupInterval = 60000; // 1 minute
         this.lastMemoryCleanup = Date.now();
-        
+
         // NEW: Simulated walking test mode
         this.simulatedWalk = {
             isActive: false,
@@ -69,13 +69,13 @@ class GPSMapper {
      */
     initReferencePoints() {
         const referencePoints = [
-            {lat: 51.492076, lng: 11.956062, x: 15, y: 55},
-            {lat: 51.491418, lng: 11.956759, x: 72, y: 39},
-            {lat: 51.490898, lng: 11.956843, x: 110, y: 48},
+            { lat: 51.492076, lng: 11.956062, x: 15, y: 55 },
+            { lat: 51.491418, lng: 11.956759, x: 72, y: 39 },
+            { lat: 51.490898, lng: 11.956843, x: 110, y: 48 },
 
-            {lat: 51.491918, lng: 11.957036, x: 40, y: 17},
-            {lat: 51.491010, lng: 11.956180, x: 91, y: 74.5},
-            {lat: 51.490472, lng: 11.957832, x: 155, y: 14},
+            { lat: 51.491918, lng: 11.957036, x: 40, y: 17 },
+            { lat: 51.491010, lng: 11.956180, x: 91, y: 74.5 },
+            { lat: 51.490472, lng: 11.957832, x: 155, y: 14 },
         ];
 
         referencePoints.forEach(point => {
@@ -113,7 +113,7 @@ class GPSMapper {
 
         // Use first 3 reference points to compute transformation
         const p1 = this.referencePoints[0];
-        const p2 = this.referencePoints[1]; 
+        const p2 = this.referencePoints[1];
         const p3 = this.referencePoints[2];
 
         // GPS coordinates (source)
@@ -149,12 +149,12 @@ class GPSMapper {
                 a: solution[0], b: solution[1], tx: solution[2],
                 c: solution[3], d: solution[4], ty: solution[5]
             };
-            
+
             console.log('Affine transformation matrix computed:', this.affineMatrix);
-            
+
             // Test the transformation with reference points
             this.validateAffineTransformation();
-            
+
         } catch (error) {
             console.warn('Failed to compute affine transformation, falling back to IDW:', error);
             this.affineMatrix = null;
@@ -167,28 +167,28 @@ class GPSMapper {
     solveLeastSquares(A, bVector) {
         // For a 3-point affine transformation, we can solve directly
         const lat1 = A[0][0], lng1 = A[0][1];
-        const lat2 = A[2][0], lng2 = A[2][1]; 
+        const lat2 = A[2][0], lng2 = A[2][1];
         const lat3 = A[4][0], lng3 = A[4][1];
-        
+
         const x1 = bVector[0], y1 = bVector[1];
         const x2 = bVector[2], y2 = bVector[3];
         const x3 = bVector[4], y3 = bVector[5];
 
         // Calculate determinant for the GPS coordinate matrix
-        const det = lat1*(lng2-lng3) + lat2*(lng3-lng1) + lat3*(lng1-lng2);
-        
+        const det = lat1 * (lng2 - lng3) + lat2 * (lng3 - lng1) + lat3 * (lng1 - lng2);
+
         if (Math.abs(det) < 1e-10) {
             throw new Error('Reference points are collinear');
         }
 
         // Solve for transformation parameters
-        const a = (x1*(lng2-lng3) + x2*(lng3-lng1) + x3*(lng1-lng2)) / det;
-        const bParam = (lat1*(x3-x2) + lat2*(x1-x3) + lat3*(x2-x1)) / det;
-        const tx = (lat1*(lng2*x3-lng3*x2) + lat2*(lng3*x1-lng1*x3) + lat3*(lng1*x2-lng2*x1)) / det;
-        
-        const c = (y1*(lng2-lng3) + y2*(lng3-lng1) + y3*(lng1-lng2)) / det;
-        const d = (lat1*(y3-y2) + lat2*(y1-y3) + lat3*(y2-y1)) / det;
-        const ty = (lat1*(lng2*y3-lng3*y2) + lat2*(lng3*y1-lng1*y3) + lat3*(lng1*y2-lng2*y1)) / det;
+        const a = (x1 * (lng2 - lng3) + x2 * (lng3 - lng1) + x3 * (lng1 - lng2)) / det;
+        const bParam = (lat1 * (x3 - x2) + lat2 * (x1 - x3) + lat3 * (x2 - x1)) / det;
+        const tx = (lat1 * (lng2 * x3 - lng3 * x2) + lat2 * (lng3 * x1 - lng1 * x3) + lat3 * (lng1 * x2 - lng2 * x1)) / det;
+
+        const c = (y1 * (lng2 - lng3) + y2 * (lng3 - lng1) + y3 * (lng1 - lng2)) / det;
+        const d = (lat1 * (y3 - y2) + lat2 * (y1 - y3) + lat3 * (y2 - y1)) / det;
+        const ty = (lat1 * (lng2 * y3 - lng3 * y2) + lat2 * (lng3 * y1 - lng1 * y3) + lat3 * (lng1 * y2 - lng2 * y1)) / det;
 
         return [a, bParam, tx, c, d, ty];
     }
@@ -200,7 +200,7 @@ class GPSMapper {
         if (!this.affineMatrix) return;
 
         console.log('Validating affine transformation:');
-        for (let i = 0; i < Math.min(3, this.referencePoints.length); i++) {
+        for (let i = 0; i < this.referencePoints.length; i++) {
             const ref = this.referencePoints[i];
             const transformed = this.transformGPSWithAffine(ref.lat, ref.lng);
             const error = Math.sqrt(Math.pow(transformed.x - ref.x, 2) + Math.pow(transformed.y - ref.y, 2));
@@ -213,9 +213,9 @@ class GPSMapper {
      */
     transformGPSWithAffine(lat, lng) {
         if (!this.affineMatrix) return null;
-        
+
         const { a, b, tx, c, d, ty } = this.affineMatrix;
-        
+
         return {
             x: a * lat + b * lng + tx,
             y: c * lat + d * lng + ty
@@ -226,7 +226,7 @@ class GPSMapper {
      * Fügt einen Referenzpunkt hinzu
      */
     addReferencePoint(lat, lng, x, y) {
-        this.referencePoints.push({lat, lng, x, y});
+        this.referencePoints.push({ lat, lng, x, y });
         // Clear cache when reference points change
         this.transformCache.clear();
     }
@@ -242,10 +242,10 @@ class GPSMapper {
         // Temporarily disable affine transformation due to numerical issues
         // Will fall back to IDW which works better with these coordinate ranges
         console.log(`Transforming GPS: ${lat}, ${lng}`);
-        
+
         const result = this.transformGPSWithIDW(lat, lng);
         console.log(`Transformed to: ${result.x}vh, ${result.y}vh`);
-        
+
         return result;
     }
 
@@ -413,7 +413,7 @@ class GPSMapper {
         const userMarker = document.createElement('div');
         userMarker.id = 'userMarker';
         userMarker.className = 'gps-user-position';
-        
+
         // Ensure basic styling is applied
         userMarker.style.position = 'absolute';
         userMarker.style.display = 'flex';
@@ -477,7 +477,7 @@ class GPSMapper {
         marker.style.top = `${vhPos.y}vh`;
         marker.style.left = `${vhPos.x}vh`;
         marker.style.zIndex = '25';
-        
+
         // Ensure visibility
         marker.style.display = 'flex';
         marker.style.opacity = '1';
@@ -904,36 +904,36 @@ class GPSMapper {
             // Use reference points at index 3 and 5 (the new reference points)
             const startRef = this.referencePoints[3];  // Index 3: {lat: 51.491918, lng: 11.957036, x: 40, y: 17}
             const endRef = this.referencePoints[4];    // Index 5: {lat: 51.490472, lng: 11.957832, x: 155, y: 14}
-            
+
             // Setup simulated walk between reference points 3 and 5
             this.simulatedWalk.startPoint = {
                 lat: startRef.lat,
                 lng: startRef.lng
             };
             this.simulatedWalk.endPoint = {
-                lat: endRef.lat, 
+                lat: endRef.lat,
                 lng: endRef.lng
             };
-            
+
             this.simulatedWalk.progress = 0;
             this.simulatedWalk.direction = 1;
             this.simulatedWalk.isActive = true;
-            
+
             // Enable testing mode
             window.CONFIG.GPS_TESTING.ENABLED = true;
-            
+
             console.log('Simulated walking mode enabled:', {
                 startPoint: this.simulatedWalk.startPoint,
                 endPoint: this.simulatedWalk.endPoint,
                 path: `Walking from ref point 3 (${startRef.x}vh, ${startRef.y}vh) to ref point 5 (${endRef.x}vh, ${endRef.y}vh)`
             });
-            
+
             // Reset smoothing for immediate response
             this.resetSmoothing();
-            
+
             // Start simulated movement
             this.startSimulatedWalk();
-            
+
             resolve({
                 mode: 'simulated_walking',
                 startPoint: this.simulatedWalk.startPoint,
@@ -950,21 +950,21 @@ class GPSMapper {
         if (this.simulatedWalk.intervalId) {
             clearInterval(this.simulatedWalk.intervalId);
         }
-        
+
         this.simulatedWalk.intervalId = setInterval(() => {
             this.updateSimulatedPosition();
         }, this.simulatedWalk.updateInterval);
     }
-    
+
     /**
      * Updates simulated position along the path
      */
     updateSimulatedPosition() {
         if (!this.simulatedWalk.isActive) return;
-        
+
         // Update progress
         this.simulatedWalk.progress += this.simulatedWalk.speed * this.simulatedWalk.direction;
-        
+
         // Reverse direction at endpoints (ping-pong movement)
         if (this.simulatedWalk.progress >= 1) {
             this.simulatedWalk.progress = 1;
@@ -975,28 +975,28 @@ class GPSMapper {
             this.simulatedWalk.direction = 1;
             console.log('Simulated walker reached start point, turning around');
         }
-        
+
         // Calculate current position using linear interpolation
         const start = this.simulatedWalk.startPoint;
         const end = this.simulatedWalk.endPoint;
         const t = this.simulatedWalk.progress;
-        
+
         // Smooth easing function for more natural movement
         const easedT = this.easeInOutSine(t);
-        
+
         const currentLat = start.lat + (end.lat - start.lat) * easedT;
         const currentLng = start.lng + (end.lng - start.lng) * easedT;
-        
+
         // Simulate GPS accuracy (realistic values for walking)
         const accuracy = 5 + Math.random() * 10; // 5-15 meters accuracy
-        
+
         // Debug simulated position
-        console.log(`Simulated GPS: ${currentLat.toFixed(6)}, ${currentLng.toFixed(6)} (progress: ${(t*100).toFixed(1)}%)`);
-        
+        console.log(`Simulated GPS: ${currentLat.toFixed(6)}, ${currentLng.toFixed(6)} (progress: ${(t * 100).toFixed(1)}%)`);
+
         // Feed simulated position to the GPS system
         this.showUserPosition(currentLat, currentLng, accuracy);
     }
-    
+
     /**
      * Smooth easing function for natural movement
      */
@@ -1009,18 +1009,18 @@ class GPSMapper {
      */
     disableTestingMode() {
         this.simulatedWalk.isActive = false;
-        
+
         if (this.simulatedWalk.intervalId) {
             clearInterval(this.simulatedWalk.intervalId);
             this.simulatedWalk.intervalId = null;
         }
-        
+
         if (window.CONFIG) {
             window.CONFIG.GPS_TESTING.ENABLED = false;
             window.CONFIG.GPS_TESTING.REAL_LOCATION = null;
-            window.CONFIG.GPS_TESTING.TEST_OFFSET = {lat: 0, lng: 0};
+            window.CONFIG.GPS_TESTING.TEST_OFFSET = { lat: 0, lng: 0 };
         }
-        
+
         console.log('Simulated walking mode disabled');
         return true;
     }
@@ -1029,7 +1029,7 @@ class GPSMapper {
      * Returns current testing status
      */
     getTestingStatus() {
-        if (!window.CONFIG) return {enabled: false};
+        if (!window.CONFIG) return { enabled: false };
 
         return {
             enabled: window.CONFIG.GPS_TESTING.ENABLED,

@@ -1,7 +1,7 @@
 class App {
     constructor() {
         this.currentActiveIndex = 0;
-        this.currentBackgroundPos = {x: 0, y: 0};
+        this.currentBackgroundPos = { x: 0, y: 0 };
         this.audioManager = new AudioManager();
         this.gpsManager = this.initGPSManager();
 
@@ -25,7 +25,6 @@ class App {
         $(document).on('gps:positionUpdate', (event, data) => {
             console.log('GPS Position aktualisiert:', data);
             this.showGPSCoordinates(data);
-            this.checkProximityToMarkers(data);
         });
 
         $(document).on('gps:error', (event, error) => {
@@ -55,34 +54,6 @@ class App {
         body.append('<button id="gpsTestingBtn" class="gps-testing-toggle">Test Mode</button>');
         body.append('<div id="gpsStatus" class="gps-status"></div>');
         body.append('<div id="gpsCoordinates" class="gps-coordinates"></div>');
-
-        this.addProximityCSS();
-    }
-
-    addProximityCSS() {
-        const proximityCSS = `
-      <style>
-        .proximity-highlight {
-          animation: proximityPulse 2s infinite;
-          z-index: 30 !important;
-        }
-        @keyframes proximityPulse {
-          0% { 
-            transform: scale(1);
-            filter: drop-shadow(0px 0px 30px rgb(9, 255, 0));
-          }
-          50% { 
-            transform: scale(1.1);
-            filter: drop-shadow(0px 0px 50px rgb(255, 255, 0));
-          }
-          100% { 
-            transform: scale(1);
-            filter: drop-shadow(0px 0px 30px rgb(9, 255, 0));
-          }
-        }
-      </style>
-    `;
-        $('head').append(proximityCSS);
     }
 
     showGPSStatus(message, type = 'success') {
@@ -101,19 +72,6 @@ class App {
       GPS: ${data.lat.toFixed(6)}, ${data.lng.toFixed(6)}<br>
       Genauigkeit: ±${data.accuracy ? data.accuracy.toFixed(0) + 'm' : 'unbekannt'}
     `).addClass('visible');
-    }
-
-    checkProximityToMarkers(data) {
-        CONFIG.GPS_MARKERS.forEach(marker => {
-            if (this.gpsManager.isNearPoint(marker.lat, marker.lng, marker.radius)) {
-                console.log(`User ist in der Nähe von ${marker.id}`);
-                this.triggerMarkerProximity(marker.id);
-            }
-        });
-    }
-
-    triggerMarkerProximity(markerId) {
-        this.showGPSStatus(`In der Nähe von ${markerId}`, 'success');
     }
 
     disableScrolling() {
@@ -270,7 +228,7 @@ class App {
         // Window resize
         $(window).resize(() => {
             if (this.isMobile()) {
-                this.currentBackgroundPos = {x: 0, y: 0};
+                this.currentBackgroundPos = { x: 0, y: 0 };
             }
         });
     }
@@ -344,17 +302,22 @@ class App {
         }
     }
 
-
     autoStartGPS() {
         if (this.gpsManager.isGPSAvailable()) {
             setTimeout(() => {
-                this.gpsManager.getCurrentLocation()
-                    .then(result => {
-                        console.log('Initiale GPS-Position erhalten:', result);
-                    })
-                    .catch(error => {
-                        console.log('Initiale GPS-Position konnte nicht ermittelt werden:', error.message);
-                    });
+                // Start continuous GPS tracking automatically
+                if (this.gpsManager.startTracking()) {
+                    console.log('GPS-Tracking automatisch gestartet');
+                } else {
+                    // Fallback: get single position if tracking fails
+                    this.gpsManager.getCurrentLocation()
+                        .then(result => {
+                            console.log('Initiale GPS-Position erhalten:', result);
+                        })
+                        .catch(error => {
+                            console.log('Initiale GPS-Position konnte nicht ermittelt werden:', error.message);
+                        });
+                }
             }, 1000);
         }
     }
