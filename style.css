@@ -41,6 +41,14 @@ body {
     box-sizing: border-box;
     overscroll-behavior: none;
     overflow-y: hidden !important;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 body.no-scroll {
@@ -102,6 +110,13 @@ body.no-scroll {
     padding: 0;
     text-align: center;
     transform: translate(-50%, -50%);
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
 
     &.text {
         background-color: rgba(255, 255, 255, 0.8);
