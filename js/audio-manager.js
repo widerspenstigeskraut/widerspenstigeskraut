@@ -4,6 +4,8 @@ class AudioManager {
     this.currentSVGAudio = null;
     this.currentPflanzeAudio = null;
     this.isAudioPlaying = false;
+    this.isPaused = false;
+    this.currentPlayingElement = null;
   }
 
   stopAllAudio() {
@@ -18,6 +20,7 @@ class AudioManager {
       this.currentAudio.currentTime = 0;
       this.currentAudio = null;
       this.isAudioPlaying = false;
+      this.isPaused = false;
     }
   }
 
@@ -26,6 +29,7 @@ class AudioManager {
       this.currentSVGAudio.pause();
       this.currentSVGAudio.currentTime = 0;
       this.currentSVGAudio = null;
+      this.isPaused = false;
     }
   }
 
@@ -34,7 +38,44 @@ class AudioManager {
       this.currentPflanzeAudio.pause();
       this.currentPflanzeAudio.currentTime = 0;
       this.currentPflanzeAudio = null;
+      this.isPaused = false;
     }
+  }
+
+  pauseCurrentAudio() {
+    if (this.currentPflanzeAudio && !this.currentPflanzeAudio.paused) {
+      this.currentPflanzeAudio.pause();
+      this.isPaused = true;
+      return true;
+    } else if (this.currentSVGAudio && !this.currentSVGAudio.paused) {
+      this.currentSVGAudio.pause();
+      this.isPaused = true;
+      return true;
+    } else if (this.currentAudio && !this.currentAudio.paused) {
+      this.currentAudio.pause();
+      this.isPaused = true;
+      return true;
+    }
+    return false;
+  }
+
+  resumeCurrentAudio() {
+    if (this.isPaused) {
+      if (this.currentPflanzeAudio && this.currentPflanzeAudio.paused) {
+        this.currentPflanzeAudio.play();
+        this.isPaused = false;
+        return true;
+      } else if (this.currentSVGAudio && this.currentSVGAudio.paused) {
+        this.currentSVGAudio.play();
+        this.isPaused = false;
+        return true;
+      } else if (this.currentAudio && this.currentAudio.paused) {
+        this.currentAudio.play();
+        this.isPaused = false;
+        return true;
+      }
+    }
+    return false;
   }
 
   playPflanzeAudio(audioFile, element) {
@@ -50,8 +91,12 @@ class AudioManager {
       // Eventuell andere Pflanzen-Audios stoppen
       this.stopPflanzeAudio();
 
+      // Store the element for future reference
+      this.currentPlayingElement = element;
+
       // Neues Audio-Objekt erstellen
       this.currentPflanzeAudio = new Audio(audioFile);
+      this.isPaused = false;
 
       // Event-Listener hinzufügen
       this.currentPflanzeAudio.addEventListener('loadstart', () => {
@@ -65,11 +110,20 @@ class AudioManager {
       this.currentPflanzeAudio.addEventListener('play', () => {
         console.log('Audio wird abgespielt');
         element.addClass('playing');
+        this.isPaused = false;
+      });
+
+      this.currentPflanzeAudio.addEventListener('pause', () => {
+        console.log('Audio pausiert');
+        // Don't remove playing class when paused, only when stopped
       });
 
       this.currentPflanzeAudio.addEventListener('ended', () => {
         console.log('Audio beendet');
         element.removeClass('playing');
+        this.currentPflanzeAudio = null;
+        this.currentPlayingElement = null;
+        this.isPaused = false;
         resolve(true);
       });
 
@@ -77,6 +131,9 @@ class AudioManager {
         console.error('Audio-Fehler:', e);
         console.error('Fehler-Details:', this.currentPflanzeAudio.error);
         element.removeClass('playing');
+        this.currentPflanzeAudio = null;
+        this.currentPlayingElement = null;
+        this.isPaused = false;
         reject(e);
       });
 
@@ -88,6 +145,9 @@ class AudioManager {
         .catch(e => {
           console.error('Audio konnte nicht abgespielt werden:', e);
           element.removeClass('playing');
+          this.currentPflanzeAudio = null;
+          this.currentPlayingElement = null;
+          this.isPaused = false;
           reject(e);
         });
     });
@@ -106,8 +166,12 @@ class AudioManager {
       // Eventuell andere SVG-Audios stoppen
       this.stopSVGAudio();
 
+      // Store the element for future reference
+      this.currentPlayingElement = element;
+
       // Neues Audio-Objekt erstellen
       this.currentSVGAudio = new Audio(audioFile);
+      this.isPaused = false;
 
       // Event-Listener hinzufügen
       this.currentSVGAudio.addEventListener('loadstart', () => {
@@ -121,11 +185,20 @@ class AudioManager {
       this.currentSVGAudio.addEventListener('play', () => {
         console.log('Magic-Audio wird abgespielt');
         element.addClass('playing');
+        this.isPaused = false;
+      });
+
+      this.currentSVGAudio.addEventListener('pause', () => {
+        console.log('Magic-Audio pausiert');
+        // Don't remove playing class when paused, only when stopped
       });
 
       this.currentSVGAudio.addEventListener('ended', () => {
         console.log('Magic-Audio beendet');
         element.removeClass('playing');
+        this.currentSVGAudio = null;
+        this.currentPlayingElement = null;
+        this.isPaused = false;
         resolve(true);
       });
 
@@ -133,6 +206,9 @@ class AudioManager {
         console.error('Magic-Audio-Fehler:', e);
         console.error('Fehler-Details:', this.currentSVGAudio.error);
         element.removeClass('playing');
+        this.currentSVGAudio = null;
+        this.currentPlayingElement = null;
+        this.isPaused = false;
         reject(e);
       });
 
@@ -144,6 +220,9 @@ class AudioManager {
         .catch(e => {
           console.error('Magic-Audio konnte nicht abgespielt werden:', e);
           element.removeClass('playing');
+          this.currentSVGAudio = null;
+          this.currentPlayingElement = null;
+          this.isPaused = false;
           reject(e);
         });
     });
@@ -160,16 +239,27 @@ class AudioManager {
 
       this.currentAudio = new Audio(audioFile);
       this.isAudioPlaying = true;
+      this.isPaused = false;
+
+      this.currentAudio.addEventListener('play', () => {
+        this.isPaused = false;
+      });
+
+      this.currentAudio.addEventListener('pause', () => {
+        // Don't set isAudioPlaying to false when paused, only when stopped
+      });
 
       this.currentAudio.addEventListener('ended', () => {
         this.isAudioPlaying = false;
         this.currentAudio = null;
+        this.isPaused = false;
         resolve();
       });
 
       this.currentAudio.addEventListener('error', (e) => {
         this.isAudioPlaying = false;
         this.currentAudio = null;
+        this.isPaused = false;
         reject(e);
       });
 
@@ -180,15 +270,16 @@ class AudioManager {
         .catch(e => {
           this.isAudioPlaying = false;
           this.currentAudio = null;
+          this.isPaused = false;
           reject(e);
         });
     });
   }
 
   isPlaying() {
-    return this.isAudioPlaying || 
-           (this.currentPflanzeAudio && !this.currentPflanzeAudio.paused) ||
-           (this.currentSVGAudio && !this.currentSVGAudio.paused);
+    return (this.isAudioPlaying && !this.isPaused) ||
+      (this.currentPflanzeAudio && !this.currentPflanzeAudio.paused) ||
+      (this.currentSVGAudio && !this.currentSVGAudio.paused);
   }
 
   getCurrentAudio() {

@@ -6,9 +6,9 @@ const CONFIG = {
 
     // GPS settings
     GPS_MARKERS: [
-        {id: 'redCircle1', lat: 51.492060, lng: 11.956057, radius: 40},
-        {id: 'redCircle2', lat: 51.491434, lng: 11.956762, radius: 40},
-        {id: 'redCircle3', lat: 51.490917, lng: 11.956818, radius: 40},
+        { id: 'redCircle1', lat: 51.492060, lng: 11.956057, radius: 40 },
+        { id: 'redCircle2', lat: 51.491434, lng: 11.956762, radius: 40 },
+        { id: 'redCircle3', lat: 51.490917, lng: 11.956818, radius: 40 },
     ],
 
     // Animation and timing settings

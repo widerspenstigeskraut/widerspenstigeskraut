@@ -54,6 +54,7 @@ class App {
         body.append('<button id="gpsTestingBtn" class="gps-testing-toggle">Test Mode</button>');
         body.append('<div id="gpsStatus" class="gps-status"></div>');
         body.append('<div id="gpsCoordinates" class="gps-coordinates"></div>');
+        body.append('<button id="audioPlayPauseBtn" class="audio-play-pause-button">⏸️</button>');
     }
 
     showGPSStatus(message, type = 'success') {
@@ -86,12 +87,14 @@ class App {
         $(CONFIG.SELECTORS.PFLANZE_CIRCLES).removeClass(`${CONFIG.CSS_CLASSES.FULLSCREEN} ${CONFIG.CSS_CLASSES.PLAYING}`);
         $(CONFIG.SELECTORS.PFLANZE_CLOSE_BUTTON).removeClass(CONFIG.CSS_CLASSES.VISIBLE);
         this.audioManager.stopPflanzeAudio();
+        this.hidePlayPauseButton();
     }
 
     closeMagic() {
         $(CONFIG.SELECTORS.MAGIC_CIRCLES).removeClass(`${CONFIG.CSS_CLASSES.FULLSCREEN} ${CONFIG.CSS_CLASSES.PLAYING}`);
         $('#magicCloseButton').removeClass(CONFIG.CSS_CLASSES.VISIBLE);
         this.audioManager.stopSVGAudio();
+        this.hidePlayPauseButton();
     }
 
     handleRedCircleClick(circleNumber) {
@@ -100,6 +103,18 @@ class App {
         $(CONFIG.SELECTORS.ANWEISUNG_BOX).addClass(CONFIG.CSS_CLASSES.VISIBLE);
         $(CONFIG.SELECTORS.CLOSE_BUTTON).removeClass(CONFIG.CSS_CLASSES.ARROW_UP).addClass(CONFIG.CSS_CLASSES.ARROW_DOWN);
         this.disableScrolling();
+
+        // Disable ALL map-point clicks while anweisungsbox is open
+        $('.map-point').addClass('disabled-while-anweisung');
+    }
+
+    closeAnweisungsbox() {
+        $(CONFIG.SELECTORS.ANWEISUNG_BOX).removeClass(CONFIG.CSS_CLASSES.VISIBLE);
+        $(CONFIG.SELECTORS.CLOSE_BUTTON).removeClass(CONFIG.CSS_CLASSES.ARROW_DOWN).addClass(CONFIG.CSS_CLASSES.ARROW_UP);
+        this.enableScrolling();
+
+        // Re-enable other map-point clicks
+        $('.map-point').removeClass('disabled-while-anweisung');
     }
 
     handlePflanzeClick(element) {
@@ -120,6 +135,7 @@ class App {
         $(CONFIG.SELECTORS.PFLANZE_CLOSE_BUTTON).addClass(CONFIG.CSS_CLASSES.VISIBLE);
 
         if (audioFile && audioFile !== '') {
+            this.showPlayPauseButton();
             this.audioManager.playPflanzeAudio(audioFile, clickedElement)
                 .then(() => {
                     setTimeout(() => {
@@ -158,6 +174,7 @@ class App {
         $('#magicCloseButton').addClass(CONFIG.CSS_CLASSES.VISIBLE);
 
         if (audioFile && audioFile !== '') {
+            this.showPlayPauseButton();
             this.audioManager.playMagicAudio(audioFile, clickedElement)
                 .then(() => {
                     setTimeout(() => {
@@ -180,28 +197,58 @@ class App {
 
     bindEvents() {
         // Red circle click handlers
-        $('#redCircle1').click(() => this.handleRedCircleClick(1));
-        $('#redCircle2').click(() => this.handleRedCircleClick(2));
-        $('#redCircle3').click(() => this.handleRedCircleClick(3));
-
-        // Anweisungsbox events
-        $(CONFIG.SELECTORS.ANWEISUNG_BOX).on('click touchend', (e) => {
-            if (!$(e.target).is(CONFIG.SELECTORS.CLOSE_BUTTON)) {
-                $(CONFIG.SELECTORS.ANWEISUNG_BOX).removeClass(CONFIG.CSS_CLASSES.VISIBLE);
-                $(CONFIG.SELECTORS.CLOSE_BUTTON).removeClass(CONFIG.CSS_CLASSES.ARROW_DOWN).addClass(CONFIG.CSS_CLASSES.ARROW_UP);
-                this.enableScrolling();
+        $('#redCircle1').click((e) => {
+            // Don't handle click if disabled while anweisungsbox is open
+            if ($(e.currentTarget).hasClass('disabled-while-anweisung')) {
+                return;
             }
+            e.stopPropagation(); // Prevent body click handler
+            this.handleRedCircleClick(1);
+        });
+        $('#redCircle2').click((e) => {
+            // Don't handle click if disabled while anweisungsbox is open
+            if ($(e.currentTarget).hasClass('disabled-while-anweisung')) {
+                return;
+            }
+            e.stopPropagation(); // Prevent body click handler
+            this.handleRedCircleClick(2);
+        });
+        $('#redCircle3').click((e) => {
+            // Don't handle click if disabled while anweisungsbox is open
+            if ($(e.currentTarget).hasClass('disabled-while-anweisung')) {
+                return;
+            }
+            e.stopPropagation(); // Prevent body click handler
+            this.handleRedCircleClick(3);
         });
 
+        // Anweisungsbox events - close on any click
+        $(CONFIG.SELECTORS.ANWEISUNG_BOX).on('click touchend', (e) => {
+            this.closeAnweisungsbox();
+        });
+
+        // Prevent close button from bubbling up
         $(CONFIG.SELECTORS.CLOSE_BUTTON).on('click touchend', (e) => {
             e.stopPropagation();
-            $(CONFIG.SELECTORS.ANWEISUNG_BOX).removeClass(CONFIG.CSS_CLASSES.VISIBLE);
-            $(CONFIG.SELECTORS.CLOSE_BUTTON).removeClass(CONFIG.CSS_CLASSES.ARROW_DOWN).addClass(CONFIG.CSS_CLASSES.ARROW_UP);
-            this.enableScrolling();
+            this.closeAnweisungsbox();
+        });
+
+        // Close anweisungsbox when clicking anywhere on the body (but not on disabled elements)
+        $('body').on('click touchend', (e) => {
+            // Only close if anweisungsbox is visible and click is not on anweisungsbox itself
+            if ($(CONFIG.SELECTORS.ANWEISUNG_BOX).hasClass(CONFIG.CSS_CLASSES.VISIBLE) &&
+                !$(e.target).closest(CONFIG.SELECTORS.ANWEISUNG_BOX).length) {
+                this.closeAnweisungsbox();
+            }
         });
 
         // Pflanze events
         $(CONFIG.SELECTORS.PFLANZE_CIRCLES).click((e) => {
+            // Don't handle click if disabled while anweisungsbox is open
+            if ($(e.currentTarget).hasClass('disabled-while-anweisung')) {
+                return;
+            }
+            e.stopPropagation(); // Prevent body click handler
             this.handlePflanzeClick(e.currentTarget);
         });
 
@@ -212,6 +259,11 @@ class App {
 
         // Magic circle events
         $(CONFIG.SELECTORS.MAGIC_CIRCLES).click((e) => {
+            // Don't handle click if disabled while anweisungsbox is open
+            if ($(e.currentTarget).hasClass('disabled-while-anweisung')) {
+                return;
+            }
+            e.stopPropagation(); // Prevent body click handler
             this.handleMagicClick(e.currentTarget);
         });
 
@@ -224,6 +276,9 @@ class App {
         $(document).on('click', '#gpsUpdateBtn', () => this.handleGPSUpdate());
         $(document).on('click', '#gpsTrackingBtn', () => this.handleTrackingToggle());
         $(document).on('click', '#gpsTestingBtn', () => this.handleTestingToggle());
+
+        // Audio play/pause button event
+        $(document).on('click', '#audioPlayPauseBtn', () => this.handlePlayPauseToggle());
 
         // Window resize
         $(window).resize(() => {
@@ -293,6 +348,29 @@ class App {
                     btn.removeClass('loading').text('Test Mode');
                     this.showGPSStatus('Test-Modus Fehler: ' + error.message, 'error');
                 });
+        }
+    }
+
+    showPlayPauseButton() {
+        $('#audioPlayPauseBtn').addClass('visible').text('⏸️');
+    }
+
+    hidePlayPauseButton() {
+        $('#audioPlayPauseBtn').removeClass('visible');
+    }
+
+    handlePlayPauseToggle() {
+        const btn = $('#audioPlayPauseBtn');
+        const isPlaying = this.audioManager.isPlaying();
+
+        if (isPlaying) {
+            if (this.audioManager.pauseCurrentAudio()) {
+                btn.text('▶️');
+            }
+        } else {
+            if (this.audioManager.resumeCurrentAudio()) {
+                btn.text('⏸️');
+            }
         }
     }
 
