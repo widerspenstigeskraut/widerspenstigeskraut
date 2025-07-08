@@ -440,7 +440,7 @@ class App {
 
     showPlayPauseButton() {
         $('#audioControlStrip').addClass('visible');
-        $('#audioPlayPauseBtn').text('⏸');
+        $('#audioPlayPauseBtn').text('pause');
     }
 
     hidePlayPauseButton() {
@@ -453,11 +453,11 @@ class App {
 
         if (isPlaying) {
             if (this.audioManager.pauseCurrentAudio()) {
-                btn.text('▶');
+                btn.text('play');
             }
         } else {
             if (this.audioManager.resumeCurrentAudio()) {
-                btn.text('⏸');
+                btn.text('pause');
             }
         }
     }

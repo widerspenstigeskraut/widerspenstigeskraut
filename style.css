@@ -196,59 +196,64 @@ img {
 }
 
 #pflanze1 {
-    top: 67vh;
-    left: 55vh;
+    top: 67svh;
+    left: 55svh;
     font-family: 'Ornaments';
 }
 
 #pflanze2 {
-    top: 65vh;
-    left: 18vh;
+    top: 65svh;
+    left: 18svh;
 }
 
 #pflanze3 {
-    top: 65vh;
-    left: 98vh;
+    top: 65svh;
+    left: 98svh;
 }
 
 #pflanze4 {
-    top: 60vh;
-    left: 142vh;
+    top: 60svh;
+    left: 142svh;
 }
 
 #pflanze5 {
-    top: 60vh;
-    left: 105vh;
+    top: 60svh;
+    left: 105svh;
+}
+
+#pflanze6 {
+    top: 50svh;
+    left: 65svh;
 }
 
 #redCircle1 {
-    top: 55vh;
-    left: 15vh;
+    top: 55svh;
+    left: 15svh;
 }
 
 #redCircle2 {
-    top: 39vh;
-    left: 72vh;
+    top: 39svh;
+    left: 72svh;
 }
 
 #redCircle3 {
-    top: 48vh;
-    left: 110vh;
+    top: 48svh;
+    left: 110svh;
 }
 
 #magic1 {
-    top: 45vh;
-    left: 40vh;
+    top: 45svh;
+    left: 40svh;
 }
 
 #magic2 {
-    top: 88vh;
-    left: 134vh;
+    top: 88svh;
+    left: 134svh;
 }
 
 #magic3 {
-    top: 30vh;
-    left: 110vh;
+    top: 30svh;
+    left: 110svh;
 }
 
 .anweisung {
@@ -260,8 +265,8 @@ img {
     position: fixed;
     left: 0;
     top: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100svw;
+    height: 100svh;
     background-color: rgba(161, 18, 223, 0.2);
     font-family: 'ReplicaStd', sans-serif;
     font-size: 25px;
@@ -288,7 +293,7 @@ img {
     margin: 0 0 8px 0;
     text-align: left;
     break-inside: avoid;
-    word-wrap: break-word;
+    word-wrap: normal;
     hyphens: auto;
     -webkit-hyphens: auto;
     -moz-hyphens: auto;
@@ -347,7 +352,7 @@ img {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100vw;
+    width: 100svw;
     height: 40px;
     background-color: rgba(162, 18, 223, 0.477);
     backdrop-filter: blur(10px);
@@ -376,7 +381,7 @@ img {
     transform: none;
     background: none;
     border: none;
-    font-family: 'ReplicaStd';
+    font-family: 'Ouroboros';
     width: 50px;
     height: 50px;
     font-size: 20px;
