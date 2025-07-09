@@ -8,6 +8,8 @@
     <title>Widerspenstiges Kraut</title>
     <link href="./style.css" rel="stylesheet">
     <link href="gps/gps-mapper.css" rel="stylesheet">
+    <link href="Kraut-teilen/kraut-teilen.css" rel="stylesheet">
+
 </head>
 
 
@@ -134,8 +136,22 @@
     <div id="referencePoint2" class="reference-point"></div>
     <div id="referencePoint3" class="reference-point"></div>
 
+    <div class="morph-container" id="morphContainer">
+        <div class=" plus-icon" id="plusIcon">+</div>
+        <div class="form-content" id="formContent">
+            <div class="question-text">Test:</div>
+            <div class="input-wrapper">
+                <input type="text" class="plant-input" id="plantInput" placeholder="Test...">
+                <div class="action-buttons">
+                    <button class="submit-btn" id="submitBtn">→</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'></script>
     <script src="./gps/gps-mapper.js"></script>
+    <script src="./Kraut-teilen/kraut-teilen.js"></script>
     <script src="./js/config.js"></script>
     <script src="./js/audio-manager.js"></script>
     <script src="./js/app.js"></script>
