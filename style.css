@@ -41,7 +41,6 @@ body {
     box-sizing: border-box;
     overscroll-behavior: none;
     overflow-y: hidden !important;
-
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;

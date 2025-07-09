@@ -89,6 +89,7 @@ class App {
         // Start-Overlay anzeigen und alle Interaktionen blockieren
         this.disableScrolling();
         $('.map-point').addClass('disabled-while-anweisung'); // Alle Map-Points deaktivieren
+        $('.morph-container').addClass('disabled-while-anweisung'); // Kraut-Button auch deaktivieren
         $('#startOverlay').show(); // Falls es im CSS versteckt ist
     }
 
@@ -100,6 +101,7 @@ class App {
         setTimeout(() => {
             this.enableScrolling();
             $('.map-point').removeClass('disabled-while-anweisung');
+            $('.morph-container').removeClass('disabled-while-anweisung'); // Kraut-Button wieder aktivieren
             this.isStarted = true;
             this.autoStartGPS(); // GPS erst nach dem Start aktivieren
         }, 1000); // Wartezeit entspricht der CSS-Transition
@@ -150,6 +152,7 @@ class App {
 
         // Disable ALL map-point clicks while anweisungsbox is open
         $('.map-point').addClass('disabled-while-anweisung');
+        $('.morph-container').addClass('disabled-while-anweisung'); // Kraut-Button auch deaktivieren
     }
 
     closeAnweisungsbox() {
@@ -159,6 +162,7 @@ class App {
 
         // Re-enable other map-point clicks
         $('.map-point').removeClass('disabled-while-anweisung');
+        $('.morph-container').removeClass('disabled-while-anweisung'); // Kraut-Button wieder aktivieren
     }
 
     handlePflanzeClick(element) {
