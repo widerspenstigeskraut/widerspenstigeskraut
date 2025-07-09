@@ -10,17 +10,22 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    box-shadow: 0 8px 20px rgba(0, 184, 148, 0.3);
     transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
     z-index: 1000;
     overflow: hidden;
 }
 
+#morphContainer2 {
+    bottom: 40px !important;
+    background: #008c07;
+}
+
 .morph-container.expanded {
     width: 100vw;
-    max-width: 400px;
     cursor: default;
-    box-shadow: 0 12px 28px rgba(0, 184, 148, 0.4);
+    backdrop-filter: blur(3px);
+    filter: blur(0px);
+    opacity: 1;
 }
 
 /* Plus Icon */
@@ -91,7 +96,6 @@
 
 .plant-input:focus {
     background: white;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
 .plant-input::placeholder {
@@ -177,4 +181,10 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
+}
+
+@media (min-width: 769px) {
+    .morph-container.expanded {
+        width: 450px;
+    }
 }

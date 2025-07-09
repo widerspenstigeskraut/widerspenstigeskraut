@@ -1,37 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('🌿 Kraut-Teilen Script lädt...');
-
     const morphContainer = document.getElementById('morphContainer');
     const plusIcon = document.getElementById('plusIcon');
     const plantInput = document.getElementById('plantInput');
     const submitBtn = document.getElementById('submitBtn');
-
-    // Prüfen ob alle Elemente existieren
-    if (!morphContainer) {
-        console.error('❌ morphContainer nicht gefunden');
-        return;
-    }
-    if (!plusIcon) {
-        console.error('❌ plusIcon nicht gefunden');
-        return;
-    }
-    if (!plantInput) {
-        console.error('❌ plantInput nicht gefunden');
-        return;
-    }
-    if (!submitBtn) {
-        console.error('❌ submitBtn nicht gefunden');
-        return;
-    }
-
-    console.log('✅ Alle Kraut-Teilen Elemente gefunden');
 
     let isExpanded = false;
     let isSubmitting = false;
 
     // Container Click
     morphContainer.addEventListener('click', function (e) {
-        console.log('Container geklickt');
         if (!isExpanded && !isSubmitting) {
             expand();
         }
@@ -39,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Plus Icon Click
     plusIcon.addEventListener('click', function (e) {
-        console.log('Plus geklickt');
         e.stopPropagation();
         if (isExpanded) {
             collapse();
@@ -50,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Submit Button
     submitBtn.addEventListener('click', function (e) {
-        console.log('Submit geklickt');
         e.stopPropagation();
         submitPlant();
     });
@@ -74,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function expand() {
-        console.log('Expanding...');
         if (isExpanded) return;
 
         isExpanded = true;
@@ -86,7 +60,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function collapse() {
-        console.log('Collapsing...');
         if (!isExpanded || isSubmitting) return;
 
         isExpanded = false;
@@ -108,10 +81,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         isSubmitting = true;
-        submitBtn.innerHTML = '⏳';
+        submitBtn.innerHTML = '...';
         submitBtn.disabled = true;
 
         try {
+            // Simulation - hier würde Google Apps Script stehen
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             morphContainer.classList.add('success');
@@ -133,21 +107,22 @@ document.addEventListener('DOMContentLoaded', function () {
         submitBtn.disabled = false;
     }
 
-    function showNotification(message, type) {
-        let notification = document.getElementById('krautNotification');
-        if (!notification) {
-            notification = document.createElement('div');
-            notification.id = 'krautNotification';
-            notification.className = 'kraut-notification';
-            document.body.appendChild(notification);
-        }
+    // function showNotification(message, type) {
+    //     // Erstelle oder verwende existierende Notification
+    //     let notification = document.getElementById('krautNotification');
+    //     if (!notification) {
+    //         notification = document.createElement('div');
+    //         notification.id = 'krautNotification';
+    //         notification.className = 'kraut-notification';
+    //         document.body.appendChild(notification);
+    //     }
 
-        notification.textContent = message;
-        notification.className = `kraut-notification ${type}`;
-        notification.classList.add('show');
+    //     notification.textContent = message;
+    //     notification.className = `kraut-notification ${type}`;
+    //     notification.classList.add('show');
 
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 3000);
-    }
+    //     setTimeout(() => {
+    //         notification.classList.remove('show');
+    //     }, 3000);
+    // }
 });
