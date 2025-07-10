@@ -45,6 +45,8 @@
 
 .morph-container.expanded .plus-icon {
     transform: translateY(-50%) rotate(45deg);
+    left: 10px;
+
 }
 
 /* Form Content */
