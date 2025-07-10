@@ -127,6 +127,9 @@ class App {
         // Alle Audios stoppen
         this.audioManager.stopAllAudio();
         this.hidePlayPauseButton();
+
+        // MorphContainer schließen
+        this.closeMorphContainer2();
     }
 
     closePflanze() {
@@ -249,6 +252,32 @@ class App {
         }
     }
 
+    handleMorphContainer2Click() {
+        // Nicht reagieren wenn noch nicht gestartet
+        if (!this.isStarted) return;
+
+        const container = $('#morphContainer2');
+
+        if (container.hasClass('expanded')) {
+            this.closeMorphContainer2();
+        } else {
+            this.openMorphContainer2();
+        }
+    }
+
+    openMorphContainer2() {
+        // Schließe alle anderen aktiven Elemente
+        this.closeAllMapPoints();
+        this.closeAnweisungsbox();
+
+        // Öffne morphContainer2
+        $('#morphContainer2').addClass('expanded');
+    }
+
+    closeMorphContainer2() {
+        $('#morphContainer2').removeClass('expanded');
+    }
+
     bindEvents() {
         // Red circle click handlers - use proper touch detection
         $('#redCircle1').on('click', (e) => {
@@ -285,6 +314,19 @@ class App {
             this.handleRedCircleClick(3);
         });
 
+        // MorphContainer2 events
+        $('#morphContainer2').on('click', (e) => {
+            // Don't handle click if disabled while anweisungsbox is open
+            if ($(e.currentTarget).hasClass('disabled-while-anweisung')) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+            e.preventDefault();
+            e.stopPropagation(); // Prevent body click handler
+            this.handleMorphContainer2Click();
+        });
+
         // Anweisungsbox events - close on any click
         $(CONFIG.SELECTORS.ANWEISUNG_BOX).on('click', (e) => {
             e.preventDefault();
@@ -311,6 +353,12 @@ class App {
                 !$(e.target).closest('#audioControlStrip').length &&
                 !$(e.target).closest('.map-point').length) { // Wichtig: nicht bei map-point clicks schließen
                 this.closeAllMapPoints(); // Neue Methode verwenden
+            }
+
+            // Close morphContainer2 when clicking outside
+            if ($('#morphContainer2').hasClass('expanded') &&
+                !$(e.target).closest('#morphContainer2').length) {
+                this.closeMorphContainer2();
             }
         });
 

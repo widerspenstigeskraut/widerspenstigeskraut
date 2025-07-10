@@ -20,6 +20,34 @@
     background: #008c07;
 }
 
+#morphContainer2.expanded {
+    height: 80px !important;
+    bottom: 0px !important;
+    /* Bis zum unteren Rand */
+}
+
+
+/* Spezielle Regel für morphContainer2 - genau 2 Zeilen über gesamte Breite */
+#morphContainer2 .question-text {
+    white-space: normal !important;
+    line-height: 1.2 !important;
+    max-width: none !important;
+    min-width: unset !important;
+    width: 100% !important;
+
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+
+    /* max-height: 2.4em !important; */
+}
+
+
+
+
+
 .morph-container.expanded {
     width: 100vw;
     cursor: default;
