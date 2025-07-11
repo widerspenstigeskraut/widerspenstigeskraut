@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbyIif1dNw8tkbr5ahi0cC6cfSDpczpvn1AyevrJlrWzKly0Izk08Gn7r0cd2pOihdmh/exec', {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbwS_MbLps-y9n88kbfU_kq0AOlixCns7L8pq6RCTJ4laPJw5BYg5CvSpvCvAnr0hYUf/exec', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
