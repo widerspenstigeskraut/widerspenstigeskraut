@@ -218,3 +218,34 @@
         width: 450px;
     }
 }
+
+/* Notification Styles */
+.kraut-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-family: 'ReplicaStd';
+    font-size: 14px;
+    color: white;
+    z-index: 2000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+.kraut-notification.show {
+    transform: translateX(0);
+}
+
+.kraut-notification.success {
+    background: #4CAF50;
+    border: 2px solid #45a049;
+}
+
+.kraut-notification.error {
+    background: #f44336;
+    border: 2px solid #d32f2f;
+}
