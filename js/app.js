@@ -266,6 +266,11 @@ class App {
     }
 
     openMorphContainer2() {
+        // Schließe morphContainer (Kraut-Eingabe) falls es geöffnet ist
+        if (window.closeMorphContainer && typeof window.closeMorphContainer === 'function') {
+            window.closeMorphContainer();
+        }
+
         // Schließe alle anderen aktiven Elemente
         this.closeAllMapPoints();
         this.closeAnweisungsbox();

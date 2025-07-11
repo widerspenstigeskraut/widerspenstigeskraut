@@ -51,6 +51,16 @@ document.addEventListener('DOMContentLoaded', function () {
     function expand() {
         if (isExpanded) return;
 
+        // Schließe morphContainer2 falls es geöffnet ist
+        const morphContainer2 = document.getElementById('morphContainer2');
+        if (morphContainer2 && morphContainer2.classList.contains('expanded')) {
+            morphContainer2.classList.remove('expanded');
+            // Informiere App.js über das Schließen falls verfügbar
+            if (window.app && typeof window.app.closeMorphContainer2 === 'function') {
+                window.app.closeMorphContainer2();
+            }
+        }
+
         isExpanded = true;
         morphContainer.classList.add('expanded');
 
@@ -74,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const plantName = plantInput.value.trim();
 
         if (!plantName) {
-            showNotification('🌿 Bitte gib den Namen eines Krauts ein!', 'error');
+            // Notification entfernt - nur visuelles Feedback über morphContainer
             morphContainer.classList.add('error');
             setTimeout(() => morphContainer.classList.remove('error'), 600);
             return;
@@ -89,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
             await submitToGoogleSheets(plantName);
 
             morphContainer.classList.add('success');
-            showNotification(`✅ "${plantName}" wurde erfolgreich gemeldet!`, 'success');
+            // Notification entfernt - nur visuelles Feedback über morphContainer
 
             setTimeout(() => {
                 collapse();
@@ -98,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (error) {
             console.error('Error:', error);
             morphContainer.classList.add('error');
-            showNotification('❌ Fehler beim Speichern. Bitte versuche es erneut.', 'error');
+            // Notification entfernt - nur visuelles Feedback über morphContainer
             setTimeout(() => morphContainer.classList.remove('error'), 600);
         }
 
@@ -163,24 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // function showNotification(message, type) {
-    //     // Erstelle oder verwende existierende Notification
-    //     let notification = document.getElementById('krautNotification');
-    //     if (!notification) {
-    //         notification = document.createElement('div');
-    //         notification.id = 'krautNotification';
-    //         notification.className = 'kraut-notification';
-    //         document.body.appendChild(notification);
-    //     }
-
-    //     notification.textContent = message;
-    //     notification.className = `kraut-notification ${type}`;
-    //     notification.classList.add('show');
-
-    //     setTimeout(() => {
-    //         notification.classList.remove('show');
-    //     }, 3000);
-    // }
+    // showNotification Funktion komplett entfernt da nicht mehr benötigt
 
     // Global function for testing GPS access (can be called from browser console)
     window.testGPS = async function () {
@@ -214,5 +207,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         console.log('=== GPS TEST END ===');
+    };
+
+    // Global function to close morphContainer from outside (e.g., from App.js)
+    window.closeMorphContainer = function () {
+        if (isExpanded) {
+            collapse();
+        }
     };
 });
