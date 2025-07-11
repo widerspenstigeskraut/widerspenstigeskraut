@@ -313,6 +313,17 @@ class App {
             e.stopPropagation(); // Prevent body click handler
             this.handleRedCircleClick(3);
         });
+        $('#redCircle4').on('click', (e) => {
+            // Don't handle click if disabled while anweisungsbox is open
+            if ($(e.currentTarget).hasClass('disabled-while-anweisung')) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+            e.preventDefault();
+            e.stopPropagation(); // Prevent body click handler
+            this.handleRedCircleClick(4);
+        });
 
         // MorphContainer2 events
         $('#morphContainer2').on('click', (e) => {

@@ -217,35 +217,45 @@ img {
     object-fit: contain;
 }
 
-#pflanze1 {
-    top: 67svh;
-    left: 55svh;
+#pflanze-lattich {
+    top: 70svh;
+    left: 54svh;
     font-family: 'Ornaments';
 }
 
 #pflanze2 {
-    top: 65svh;
-    left: 18svh;
+    top: 77svh;
+    left: 24svh;
 }
 
-#pflanze3 {
-    top: 65svh;
-    left: 98svh;
+#pflanze-spitzw1 {
+    top: 75svh;
+    left: 68svh;
 }
 
-#pflanze4 {
+#pflanze-bn {
+    top: 77svh;
+    left: 152svh;
+}
+
+#pflanze-giersch {
     top: 60svh;
-    left: 142svh;
+    left: 112svh;
 }
 
-#pflanze5 {
-    top: 60svh;
-    left: 105svh;
-}
-
-#pflanze6 {
+#pflanze-beifuss {
     top: 50svh;
     left: 65svh;
+}
+
+#pflanze7 {
+    top: 51svh;
+    left: 92svh;
+}
+
+#pflanze-lz2 {
+    top: 77svh;
+    left: 76svh;
 }
 
 #redCircle1 {
@@ -253,19 +263,34 @@ img {
     left: 15svh;
 }
 
-#redCircle2 {
+/* #redCircle2 {
     top: 39svh;
     left: 72svh;
+} */
+
+/* #redCircle3 {
+    top: 48svh;
+    left: 110svh;
+} */
+
+#redCircle2 {
+    top: 77svh;
+    left: 43svh;
 }
 
 #redCircle3 {
-    top: 48svh;
-    left: 110svh;
+    top: 52svh;
+    left: 75svh;
+}
+
+#redCircle4 {
+    top: 62svh;
+    left: 117svh;
 }
 
 #magic1 {
-    top: 45svh;
-    left: 40svh;
+    top: 66svh;
+    left: 74svh;
 }
 
 #magic2 {
@@ -274,8 +299,18 @@ img {
 }
 
 #magic3 {
+    top: 55svh;
+    left: 100svh;
+}
+
+#magic4 {
     top: 30svh;
-    left: 110svh;
+    left: 100svh;
+}
+
+#magic5 {
+    top: 77svh;
+    left: 48svh;
 }
 
 .anweisung {
