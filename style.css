@@ -32,6 +32,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    overflow-y: hidden !important;
 }
 
 body {
@@ -40,7 +41,7 @@ body {
     padding: 0;
     box-sizing: border-box;
     overscroll-behavior: none;
-    overflow-y: hidden !important;
+
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
