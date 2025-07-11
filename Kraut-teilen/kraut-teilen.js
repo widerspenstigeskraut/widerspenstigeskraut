@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
     async function submitToGoogleSheets(plantName) {
         // Get GPS coordinates
         let gpsLocation = 'Standort nicht verfügbar';
-        
+
         try {
             if (window.app && window.app.gpsManager) {
                 const location = await window.app.gpsManager.getCurrentLocation();
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
             plant: plantName.trim(),
             location: gpsLocation
         });
-        
+
         console.log('Form data being sent:');
         for (const [key, value] of formData.entries()) {
             console.log(`${key}: "${value}"`);
@@ -163,32 +163,32 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function showNotification(message, type) {
-        // Erstelle oder verwende existierende Notification
-        let notification = document.getElementById('krautNotification');
-        if (!notification) {
-            notification = document.createElement('div');
-            notification.id = 'krautNotification';
-            notification.className = 'kraut-notification';
-            document.body.appendChild(notification);
-        }
+    // function showNotification(message, type) {
+    //     // Erstelle oder verwende existierende Notification
+    //     let notification = document.getElementById('krautNotification');
+    //     if (!notification) {
+    //         notification = document.createElement('div');
+    //         notification.id = 'krautNotification';
+    //         notification.className = 'kraut-notification';
+    //         document.body.appendChild(notification);
+    //     }
 
-        notification.textContent = message;
-        notification.className = `kraut-notification ${type}`;
-        notification.classList.add('show');
+    //     notification.textContent = message;
+    //     notification.className = `kraut-notification ${type}`;
+    //     notification.classList.add('show');
 
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 3000);
-    }
+    //     setTimeout(() => {
+    //         notification.classList.remove('show');
+    //     }, 3000);
+    // }
 
     // Global function for testing GPS access (can be called from browser console)
-    window.testGPS = async function() {
+    window.testGPS = async function () {
         console.log('=== GPS TEST START ===');
         console.log('navigator.geolocation:', navigator.geolocation);
         console.log('window.app:', window.app);
         console.log('window.app.gpsManager:', window.app ? window.app.gpsManager : 'no app');
-        
+
         if (navigator.geolocation) {
             try {
                 const position = await new Promise((resolve, reject) => {
@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Browser GPS error:', error);
             }
         }
-        
+
         if (window.app && window.app.gpsManager) {
             try {
                 const location = await window.app.gpsManager.getCurrentLocation();
