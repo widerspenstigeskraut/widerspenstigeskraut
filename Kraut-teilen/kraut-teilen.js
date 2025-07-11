@@ -130,21 +130,33 @@ document.addEventListener('DOMContentLoaded', function () {
             console.warn('GPS location error:', error);
         }
 
-        // Simple fetch request - no iframe needed for production
+        // Debug: Log what we're sending
+        const formData = new URLSearchParams({
+            plant: plantName.trim(),
+            location: gpsLocation
+        });
+        
+        console.log('Form data being sent:');
+        for (const [key, value] of formData.entries()) {
+            console.log(`${key}: "${value}"`);
+        }
+
         try {
             const response = await fetch('https://script.google.com/macros/s/AKfycbyIif1dNw8tkbr5ahi0cC6cfSDpczpvn1AyevrJlrWzKly0Izk08Gn7r0cd2pOihdmh/exec', {
                 method: 'POST',
-                body: new URLSearchParams({
-                    plant: plantName.trim(),
-                    location: gpsLocation
-                })
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
             });
 
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}`);
             }
 
-            console.log('Submitted to Google Sheets:', { plant: plantName.trim(), location: gpsLocation });
+            const responseText = await response.text();
+            console.log('Google Apps Script response:', responseText);
+            console.log('Successfully submitted:', { plant: plantName.trim(), location: gpsLocation });
         } catch (error) {
             console.error('Submission error:', error);
             throw error;
