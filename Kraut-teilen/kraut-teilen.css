@@ -36,7 +36,7 @@
     width: 100% !important;
 
     display: -webkit-box !important;
-    -webkit-line-clamp: 3 !important;
+    -webkit-line-clamp: 4 !important;
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
@@ -98,7 +98,7 @@
 .question-text {
     color: rgb(0, 0, 0);
     font-family: 'ReplicaStd';
-    -webkit-text-stroke: 1.2px #000000;
+    /* -webkit-text-stroke: 1.2px #000000; */
     line-height: 0.95;
     font-size: 13px;
     margin-right: 12px;
