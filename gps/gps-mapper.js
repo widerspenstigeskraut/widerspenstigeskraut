@@ -70,8 +70,8 @@ class GPSMapper {
     initReferencePoints() {
         const referencePoints = [
             { lat: 51.492076, lng: 11.956062, x: 15, y: 55 },
-            { lat: 51.491418, lng: 11.956759, x: 72, y: 39 },
-            { lat: 51.490898, lng: 11.956843, x: 110, y: 48 },
+            { lat: 51.491600, lng: 11.955818, x: 43, y: 77 },
+            { lat: 51.491316, lng: 11.956467, x: 75, y: 55 },
 
             { lat: 51.491918, lng: 11.957036, x: 40, y: 17 },
             { lat: 51.491010, lng: 11.956180, x: 91, y: 74.5 },
