@@ -28,14 +28,11 @@
     src: url("fonts/Cosplay-Trial-Regular.woff") format("woff");
 }
 
-html{
-    overflow: hidden !important;
-}
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    overscroll-behavior: none;
+
 }
 
 body {
@@ -55,7 +52,7 @@ body {
 }
 
 body.no-scroll {
-     overflow: hidden !important;
+    /* overflow: hidden; */
 }
 
 .hintergrund {
@@ -555,7 +552,6 @@ img {
     transition: all 1s ease-in-out;
     opacity: 1;
     visibility: visible;
-    overflow: hidden !important
 }
 
 .start-overlay.hidden {
