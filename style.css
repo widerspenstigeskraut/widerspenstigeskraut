@@ -123,11 +123,11 @@ body.no-scroll {
         /* border: solid 2px rgb(150, 0, 215); */
         color: rgb(197, 197, 197);
         font-family: 'Ouvriere', sans-serif;
-        font-size: 55px;
+        font-size: 35px;
     }
 
     &.text:hover {
-        font-size: 85px;
+        font-size: 50px;
         filter: drop-shadow(0px 0px 5px rgb(140, 0, 255));
     }
 
@@ -241,7 +241,7 @@ img {
 
 #pflanze-giersch {
     top: 60svh;
-    left: 112svh;
+    left: 110svh;
 }
 
 #pflanze-beifuss {
