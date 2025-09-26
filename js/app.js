@@ -13,8 +13,8 @@ class App {
         this.initGPSFeatures();
         this.bindEvents();
         this.handleMobileSetup();
-        this.showStartOverlay(); // Start-Overlay anzeigen
-        // GPS wird erst nach dem Start initialisiert
+
+        this.showStartOverlay();
     }
 
     initGPSManager() {
@@ -85,26 +85,29 @@ class App {
     `).addClass('visible');
     }
 
+
+
     showStartOverlay() {
-        // Start-Overlay anzeigen und alle Interaktionen blockieren
         this.disableScrolling();
-        $('.map-point').addClass('disabled-while-anweisung'); // Alle Map-Points deaktivieren
-        $('.morph-container').addClass('disabled-while-anweisung'); // Kraut-Button auch deaktivieren
-        $('#startOverlay').show(); // Falls es im CSS versteckt ist
+        $('.map-point').addClass('disabled-while-anweisung');
+        $('.morph-container').addClass('disabled-while-anweisung');
+
+        $('#startOverlay').show();
+
     }
 
     hideStartOverlay() {
         const overlay = $('#startOverlay');
         overlay.addClass('hidden');
 
-        // Nach der Transition alles aktivieren
         setTimeout(() => {
             this.enableScrolling();
             $('.map-point').removeClass('disabled-while-anweisung');
-            $('.morph-container').removeClass('disabled-while-anweisung'); // Kraut-Button wieder aktivieren
+            $('.morph-container').removeClass('disabled-while-anweisung');
+
             this.isStarted = true;
-            this.autoStartGPS(); // GPS erst nach dem Start aktivieren
-        }, 1000); // Wartezeit entspricht der CSS-Transition
+            this.autoStartGPS();
+        }, 1000);
     }
 
     disableScrolling() {
@@ -150,7 +153,11 @@ class App {
         $('.anweisung').hide();
         $(`.anweisung.nr${circleNumber}`).show();
         $(CONFIG.SELECTORS.ANWEISUNG_BOX).addClass(CONFIG.CSS_CLASSES.VISIBLE);
-        $(CONFIG.SELECTORS.CLOSE_BUTTON).removeClass(CONFIG.CSS_CLASSES.ARROW_UP).addClass(CONFIG.CSS_CLASSES.ARROW_DOWN);
+
+
+        $('#closeButtonStrip').addClass('visible');
+
+
         this.disableScrolling();
 
         // Disable ALL map-point clicks while anweisungsbox is open
@@ -160,7 +167,9 @@ class App {
 
     closeAnweisungsbox() {
         $(CONFIG.SELECTORS.ANWEISUNG_BOX).removeClass(CONFIG.CSS_CLASSES.VISIBLE);
-        $(CONFIG.SELECTORS.CLOSE_BUTTON).removeClass(CONFIG.CSS_CLASSES.ARROW_DOWN).addClass(CONFIG.CSS_CLASSES.ARROW_UP);
+
+        $('#closeButtonStrip').removeClass('visible');
+
         this.enableScrolling();
 
         // Re-enable other map-point clicks
@@ -441,6 +450,7 @@ class App {
                 this.currentBackgroundPos = { x: 0, y: 0 };
             }
         });
+
     }
 
     handleGPSUpdate() {

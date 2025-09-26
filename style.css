@@ -32,7 +32,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
 
+
+
+html {
+    overscroll-behavior: none;
+    overscroll-behavior-x: none;
 }
 
 body {
@@ -49,10 +55,16 @@ body {
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
     touch-action: auto;
+
+    overscroll-behavior-x: none;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: auto;
 }
 
+
+
 body.no-scroll {
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 .hintergrund {
@@ -60,6 +72,7 @@ body.no-scroll {
     width: min-content;
     z-index: 1;
     height: 100%;
+    overscroll-behavior-x: none;
 }
 
 .farbflaeche {
@@ -314,10 +327,7 @@ img {
     left: 48svh;
 }
 
-.anweisung {
-    display: none;
-}
-
+/* Anweisungsbox angepasst für einzelne scrollbare Anweisungen */
 .anweisungsbox {
     display: block;
     position: fixed;
@@ -331,36 +341,108 @@ img {
     line-height: 1.1;
     -webkit-text-stroke: 1.3px black;
     z-index: 40;
-    padding: 20px;
     transition: all 1.5s ease-in-out, filter 2s ease-in-out;
     backdrop-filter: blur(10px);
     opacity: 0;
     filter: blur(10px);
     pointer-events: none;
-
-    &.visible {
-        backdrop-filter: blur(3px);
-        filter: blur(0px);
-        opacity: 1;
-        pointer-events: all;
-    }
+    padding: 20px;
+    padding-bottom: 80px;
 }
 
-/* Anweisungen in der Anweisungsbox */
-.anweisungsbox p {
-    margin: 0 0 8px 0;
+.anweisungsbox.visible {
+    backdrop-filter: blur(3px);
+    filter: blur(0px);
+    opacity: 1;
+    pointer-events: all;
+}
+
+.anweisung {
+    display: none;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0;
     text-align: left;
     max-width: 500px;
-    break-inside: avoid;
     word-wrap: normal;
     hyphens: auto;
     -webkit-hyphens: auto;
     -moz-hyphens: auto;
+    padding-right: 10px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .anweisung span {
     font-size: 40px;
     font-family: 'Ouroboros';
+}
+
+.anweisung::-webkit-scrollbar {
+    display: none;
+}
+
+/* Close-Button-Box - ähnlich der Audio-Control-Strip */
+.close-button-strip {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100svw;
+    height: 40px;
+    background-color: rgba(162, 18, 223, 0.477);
+    /* Transparent anstatt lila */
+    backdrop-filter: blur(1px);
+    z-index: 101;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 1.5s ease-in-out, filter 2s ease-in-out;
+    /* opacity: 50%; */
+    /* filter: blur(10px); */
+    pointer-events: none;
+}
+
+.anweisungsbox.visible~.hintergrund {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+.close-button-strip.visible {
+    opacity: 1;
+    filter: blur(0px);
+    pointer-events: all;
+    /* backdrop-filter: blur(10px); */
+}
+
+.close-button {
+    position: relative;
+    bottom: 0;
+    transform: none;
+    background: none;
+    border: none;
+    font-family: 'ReplicaStd';
+    font-size: 25px;
+    color: #000000;
+    -webkit-text-stroke: 1.3px #000000;
+    cursor: pointer;
+    z-index: 102;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 1;
+    visibility: visible;
+}
+
+.close-button:hover {
+    transform: scale(1.1);
+}
+
+.close-button:active {
+    transform: scale(0.95);
 }
 
 .reference-point {
@@ -388,22 +470,6 @@ img {
 #referencePoint3 {
     top: 14svh;
     left: 155svh;
-}
-
-.close-button {
-    position: absolute;
-    bottom: 15px;
-    left: 50%;
-    font-family: 'ReplicaStd';
-    transform: translateX(-50%);
-    background: none;
-    border: none;
-    font-size: 18px;
-    color: rgb(0, 0, 0);
-    -webkit-text-stroke: 1.3px black;
-    cursor: pointer;
-    z-index: 20;
-    transition: transform 0.3s ease;
 }
 
 /* Audio Control Strip - schmaler Streifen am unteren Bildrand */
@@ -486,8 +552,8 @@ img {
     z-index: 100 !important;
 }
 
-/* Ensure anweisungsbox close button is clickable */
-.anweisungsbox .close-button {
+/* Ensure close-button-strip close button is clickable */
+.close-button-strip .close-button {
     z-index: 101 !important;
     pointer-events: all;
 }

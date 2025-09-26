@@ -21,9 +21,9 @@
 }
 
 #morphContainer2.expanded {
-    height: 80px !important;
+    height: 100px !important;
     bottom: 0px !important;
-    /* Bis zum unteren Rand */
+
 }
 
 
@@ -31,10 +31,10 @@
 #morphContainer2 .question-text {
     white-space: normal !important;
     line-height: 1.2 !important;
+    height: 80px !important;
     max-width: none !important;
     min-width: unset !important;
     width: 100% !important;
-
     display: -webkit-box !important;
     -webkit-line-clamp: 4 !important;
     -webkit-box-orient: vertical !important;
