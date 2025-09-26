@@ -334,8 +334,8 @@ img {
     height: 100svh;
     background-color: rgba(161, 18, 223, 0.2);
     font-family: 'ReplicaStd', sans-serif;
-    font-size: 25px;
-    line-height: 1.1;
+    font-size: 23px;
+    line-height: 1;
     -webkit-text-stroke: 1.3px black;
     z-index: 40;
     transition: all 1.5s ease-in-out, filter 2s ease-in-out;
@@ -362,10 +362,10 @@ img {
     margin: 0;
     text-align: left;
     max-width: 500px;
-    word-wrap: normal;
-    hyphens: auto;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
+    word-wrap: break-word;
+    hyphens: none;
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
     padding-right: 10px;
     scrollbar-width: none;
     -ms-overflow-style: none;
