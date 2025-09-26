@@ -18,37 +18,53 @@
 #morphContainer2 {
     bottom: 40px !important;
     background: #008c07;
+    height: 40px !important;
+    width: 40px !important;
+    /* Mobile: Nur width animieren, height und bottom sofort setzen */
+    transition: width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
 }
 
+/* Mobile: Expandierter Zustand (Standard) */
 #morphContainer2.expanded {
-    height: 100px !important;
+    height: auto !important;
+    min-height: 80px !important;
     bottom: 0px !important;
-
+    width: 100vw !important;
+    padding: 15px 20px !important;
+    transform-origin: bottom left !important;
+    /* Beibehalten */
+    /* Smooth Transition nur für width und padding */
+    transition: width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1),
+        padding 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
 }
 
+#morphContainer2 .form-content {
+    align-items: center !important;
+    height: 100% !important;
+    opacity: 0 !important;
+    transition: opacity 0.2s ease !important;
+}
 
-/* Spezielle Regel für morphContainer2 - genau 2 Zeilen über gesamte Breite */
+#morphContainer2.expanded .form-content {
+    opacity: 1 !important;
+    transition: opacity 0.2s ease 0.2s !important;
+}
+
+/* Mobile: Text-Styling */
 #morphContainer2 .question-text {
     white-space: normal !important;
-    line-height: 1.2 !important;
-    height: 80px !important;
-    max-width: none !important;
-    min-width: unset !important;
+    height: auto !important;
     width: 100% !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 4 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-
-    /* max-height: 2.4em !important; */
+    display: block !important;
+    overflow: visible !important;
+    font-size: 13px !important;
 }
+
+
 
 .question-text span {
     font-family: 'Cosplay';
 }
-
-
 
 
 
@@ -77,6 +93,26 @@
     transform: translateY(-50%) rotate(45deg);
     left: 10px;
 
+}
+
+@media (min-width: 769px) {
+    #morphContainer2 {
+        /* Desktop: Alle Eigenschaften animieren */
+        transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    }
+
+    #morphContainer2.expanded {
+        height: 80px !important;
+        width: 450px !important;
+        padding: 15px 20px !important;
+        bottom: 0px !important;
+    }
+
+    #morphContainer2 .form-content {
+        align-items: center !important;
+        height: 100% !important;
+        padding-top: 0 !important;
+    }
 }
 
 /* Form Content */

@@ -4,8 +4,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const plantInput = document.getElementById('plantInput');
     const submitBtn = document.getElementById('submitBtn');
 
+    // MorphContainer2 Elemente
+    const morphContainer2 = document.getElementById('morphContainer2');
+    const plusIcon2 = document.getElementById('plus-icon');
+
     let isExpanded = false;
     let isSubmitting = false;
+    let isExpanded2 = false;
+
+    // ===== MORPHCONTAINER (Original) =====
 
     // Container Click
     morphContainer.addEventListener('click', function (e) {
@@ -41,24 +48,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Escape Key
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && isExpanded) {
-            collapse();
-        }
-    });
-
     function expand() {
         if (isExpanded) return;
 
         // Schließe morphContainer2 falls es geöffnet ist
-        const morphContainer2 = document.getElementById('morphContainer2');
-        if (morphContainer2 && morphContainer2.classList.contains('expanded')) {
-            morphContainer2.classList.remove('expanded');
-            // Informiere App.js über das Schließen falls verfügbar
-            if (window.app && typeof window.app.closeMorphContainer2 === 'function') {
-                window.app.closeMorphContainer2();
-            }
+        if (isExpanded2) {
+            collapse2();
         }
 
         isExpanded = true;
@@ -77,6 +72,62 @@ document.addEventListener('DOMContentLoaded', function () {
         plantInput.value = '';
         morphContainer.classList.remove('success', 'error');
     }
+
+    // ===== MORPHCONTAINER2 EVENT LISTENERS =====
+
+    // MorphContainer2 Event Listeners
+    if (morphContainer2 && plusIcon2) {
+        morphContainer2.addEventListener('click', function (e) {
+            if (!isExpanded2) {
+                expand2();
+            }
+        });
+
+        plusIcon2.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (isExpanded2) {
+                collapse2();
+            } else {
+                expand2();
+            }
+        });
+    }
+
+    // ===== MORPHCONTAINER2 FUNCTIONS =====
+
+    function expand2() {
+        if (isExpanded2) return;
+
+        // Schließe morphContainer falls es geöffnet ist
+        if (isExpanded) {
+            collapse();
+        }
+
+        isExpanded2 = true;
+        morphContainer2.classList.add('expanded');
+    }
+
+    function collapse2() {
+        if (!isExpanded2) return;
+
+        isExpanded2 = false;
+        morphContainer2.classList.remove('expanded');
+    }
+
+    // ===== GEMEINSAME EVENT LISTENER =====
+
+    // Escape Key für beide Container
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            if (isExpanded) {
+                collapse();
+            } else if (isExpanded2) {
+                collapse2();
+            }
+        }
+    });
+
+    // ===== PLANT SUBMISSION LOGIC =====
 
     async function submitPlant() {
         if (isSubmitting) return;
@@ -173,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // showNotification Funktion komplett entfernt da nicht mehr benötigt
+    // ===== GLOBAL FUNCTIONS =====
 
     // Global function for testing GPS access (can be called from browser console)
     window.testGPS = async function () {
@@ -213,6 +264,13 @@ document.addEventListener('DOMContentLoaded', function () {
     window.closeMorphContainer = function () {
         if (isExpanded) {
             collapse();
+        }
+    };
+
+    // Global function to close morphContainer2 from outside
+    window.closeMorphContainer2 = function () {
+        if (isExpanded2) {
+            collapse2();
         }
     };
 });
