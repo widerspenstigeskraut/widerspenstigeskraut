@@ -5,7 +5,7 @@
     left: 0px;
     height: 40px;
     width: 40px;
-    background: #7b00ff;
+    background: #48fd46;
     border: none;
     display: flex;
     align-items: center;
@@ -55,8 +55,6 @@
 .morph-container.expanded {
     width: 100vw;
     cursor: default;
-    backdrop-filter: blur(3px);
-    filter: blur(0px);
     opacity: 1;
 }
 
