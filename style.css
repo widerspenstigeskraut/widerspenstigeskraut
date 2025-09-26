@@ -61,14 +61,8 @@ body {
     -webkit-overflow-scrolling: auto;
 }
 
-
-
 body.no-scroll {
-<<<<<<< HEAD
     overflow: hidden;
-=======
-     overflow: hidden;
->>>>>>> 5200335fdb91629adc2b7581bcba348540c07f1d
 }
 
 .hintergrund {
