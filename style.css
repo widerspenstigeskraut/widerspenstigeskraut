@@ -641,7 +641,7 @@ img {
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
-    word-break: break-word !important;
+    /* word-break: break-word !important; */
 }
 
 .start-description span {
