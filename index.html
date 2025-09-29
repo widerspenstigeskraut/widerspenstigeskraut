@@ -17,7 +17,7 @@
 </head>
 
 
-<body>
+<body class="start-active">
     <!-- Hintergrund -->
     <div class="hintergrund">
         <div class="farbflaeche"></div>
@@ -25,12 +25,11 @@
         <img src="img/karte.png" class="karte">
     </div>
 
+    <!-- Start Overlay -->
     <div class="start-overlay" id="startOverlay">
-        <!-- SVG als img-Element -->
         <img src="img/opener-web.png" class="start-overlay-img" alt="Background">
 
         <div class="start-content">
-            <!-- SVG-Pfeil als Button  -->
             <button class="svg-arrow-button" id="startButton">
                 <img src="img/pfeil2.svg" class="arrow-svg" alt="Pfeil">
             </button>
@@ -72,10 +71,6 @@
     <div class="map-point magic" id="magic3" data-audio="sounds/unkraut.mp3">
         <img src="img/magic.svg">
     </div>
-
-    <!-- <div class="map-point magic" id="magic4" data-audio="sounds/einleitungs-background.mp3">
-        <img src="img/magic.svg">
-    </div> -->
 
     <div class="map-point magic" id="magic5" data-audio="sounds/geschichte1.mp3">
         <img src="img/magic.svg">
@@ -168,11 +163,13 @@
 
     </div>
 
-
+    <!-- Reference Points -->
     <div id="referencePoint1" class="reference-point"></div>
     <div id="referencePoint2" class="reference-point"></div>
     <div id="referencePoint3" class="reference-point"></div>
 
+
+    <!-- ? * Buttons -->
     <div class="morph-container" id="morphContainer2">
         <div class="plus-icon" id="plus-icon">?</div>
         <div class="form-content" id="formContent">

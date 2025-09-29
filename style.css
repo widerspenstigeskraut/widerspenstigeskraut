@@ -1,3 +1,6 @@
+/* ============================
+   FONTS
+   ============================ */
 @font-face {
     font-family: 'Ouvriere';
     font-style: normal;
@@ -28,13 +31,14 @@
     src: url("fonts/Cosplay-Trial-Regular.woff") format("woff");
 }
 
+/* ============================
+   RESET & BASE
+   ============================ */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
-
 
 html {
     overscroll-behavior: none;
@@ -47,7 +51,10 @@ body {
     padding: 0;
     box-sizing: border-box;
     overscroll-behavior: none;
+    overscroll-behavior-x: none;
     overflow-y: hidden !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: auto;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -55,21 +62,26 @@ body {
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
     touch-action: auto;
-
-    overscroll-behavior-x: none;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: auto;
 }
 
 body.no-scroll {
     overflow: hidden;
 }
 
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ============================
+   HINTERGRUND / BACKGROUND
+   ============================ */
 .hintergrund {
     position: relative;
     width: min-content;
-    z-index: 1;
     height: 100%;
+    z-index: 1;
     overscroll-behavior-x: none;
 }
 
@@ -77,8 +89,8 @@ body.no-scroll {
     position: absolute;
     top: 0;
     left: 0;
-    height: 100%;
     width: 100%;
+    height: 100%;
     z-index: 30;
     background-color: rgb(150, 0, 215);
     mix-blend-mode: luminosity;
@@ -88,146 +100,245 @@ body.no-scroll {
     position: relative;
     width: auto;
     height: 100vh;
+    min-width: 100vw;
     object-fit: cover;
     object-position: left center;
-    min-width: 100vw;
     vertical-align: bottom;
 }
 
 .karte {
     position: absolute;
-    width: auto;
-    height: 100%;
-    object-fit: contain;
-    object-position: left center;
-    min-width: 100vw;
     top: 0;
     left: 0;
+    width: auto;
+    height: 100%;
+    min-width: 100vw;
+    object-fit: contain;
+    object-position: left center;
     vertical-align: bottom;
     filter: drop-shadow(0px 0px 30px rgb(9, 255, 0));
 }
 
-.map-point {
+/* ============================
+   START OVERLAY
+   ============================ */
+.start-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100dvw;
+    height: 100svh;
+    z-index: 1000;
     display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background-color: transparent;
+    backdrop-filter: blur(5px);
+    opacity: 1;
+    visibility: visible;
+    transition: all 1s ease-in-out;
+}
+
+.start-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.start-overlay-img {
     position: absolute;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    object-fit: fill;
+    object-position: center;
+    opacity: 0.5;
+    filter: drop-shadow(0px 0px 20px rgba(81, 255, 0, 0.336));
+}
+
+.start-content {
+    width: 90%;
+    margin-bottom: 50px;
+    color: rgb(0, 0, 0);
+    font-family: 'ReplicaStd', sans-serif;
+    font-size: 25px;
+    line-height: 1.1;
+    -webkit-text-stroke: 1.3px rgb(0, 0, 0);
+    filter: drop-shadow(0px 0px 20px rgb(255, 255, 255));
+}
+
+.start-description {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.start-description span {
+    font-size: 40px;
+    font-family: 'Ouroboros';
+}
+
+.svg-arrow-button {
+    display: block;
+    width: 30svh;
+    height: auto;
+    margin: 0 auto 30px auto;
+    padding: 0;
+    background: none;
+    border: none;
     cursor: pointer;
-    z-index: 15;
+    transition: all 0.3s ease;
+    animation: arrowPulse 3s infinite alternate ease-in-out;
+}
+
+.svg-arrow-button:hover {
+    transform: translateY(-3px) scale(1.1);
+    filter: drop-shadow(0 8px 15px rgba(150, 0, 215, 0.4));
+    animation-play-state: paused;
+}
+
+.svg-arrow-button:active {
+    transform: translateY(0) scale(0.95);
+}
+
+.arrow-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.3));
+    transition: all 0.1s ease;
+}
+
+.svg-arrow-button:hover .arrow-svg {
+    filter: drop-shadow(0 5px 15px rgba(150, 0, 215, 0.6));
+}
+
+/* ============================
+   START-ACTIVE STATE
+   ============================ */
+body.start-active .morph-container,
+body.start-active .map-point,
+body.start-active .anweisungsbox,
+body.start-active .audio-control-strip,
+body.start-active .close-button-strip {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+.morph-container,
+.map-point,
+.anweisungsbox {
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+/* ============================
+   MAP POINTS
+   ============================ */
+.map-point {
+    position: absolute;
+    display: flex;
     align-items: center;
     justify-content: center;
+    width: 40px;
+    height: 40px;
     margin: 0;
     padding: 0;
+    border-radius: 50%;
+    cursor: pointer;
     text-align: center;
     transform: translate(-50%, -50%);
-
+    z-index: 15;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
-
-    &.text {
-        /* background-color: rgba(255, 255, 255, 0.8); */
-        /* border: solid 2px rgb(150, 0, 215); */
-        color: rgb(197, 197, 197);
-        font-family: 'Ouvriere', sans-serif;
-        font-size: 35px;
-    }
-
-    &.text:hover {
-        font-size: 50px;
-        filter: drop-shadow(0px 0px 5px rgb(140, 0, 255));
-    }
-
-    &.magic {
-        width: 40px;
-        height: 40px;
-        max-height: initial;
-        max-width: initial;
-        filter: drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.424));
-
-        &.fullscreen.playing {
-            animation: magicRotate 5s infinite linear;
-        }
-
-        &.fullscreen.paused {
-            animation: magicRotate 5s infinite linear;
-            animation-play-state: paused;
-        }
-
-        &.fullscreen.stopped {
-            animation: none;
-        }
-
-        &.magic:hover {
-            width: 50px !important;
-            height: 50px !important;
-        }
-    }
-
-    &.pflanze {
-        width: 100px !important;
-        height: 100px !important;
-        max-height: initial;
-        max-width: initial;
-
-        border-radius: 100%;
-        filter: blur(10px);
-
-        transition: filter 2s ease-in-out;
-        animation: pulse 3s infinite alternate ease-in-out;
-
-        &.fullscreen {
-            filter: blur(0px);
-            background-color: rgba(255, 0, 0, 0);
-            transition: all 2s ease-in-out;
-            animation: none;
-        }
-
-        /* Roter Shadow wenn Audio abgespielt wird */
-
-        &.fullscreen.playing {
-            filter: drop-shadow(0px 0px 10px rgb(255, 255, 255));
-            transition: all 2s ease-in-out;
-
-        }
-
-        /* Kein Shadow wenn pausiert */
-
-        &.fullscreen.paused {
-            filter: none;
-        }
-
-        /* Kein Shadow wenn gestoppt */
-
-        &.fullscreen.stopped {
-            filter: none;
-        }
-
-        &.pflanze:hover {
-            width: auto;
-            height: 120%;
-            filter: drop-shadow(0px 0px 20px rgb(255, 0, 0));
-        }
-    }
 }
 
-.auszeichnung {
-    font-size: 28px !important;
-    line-height: 0.9;
-    font-family: 'Cosplay' !important;
+/* Text Points */
+.map-point.text {
+    color: rgb(197, 197, 197);
+    font-family: 'Ouvriere', sans-serif;
+    font-size: 35px;
 }
 
-
-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+.map-point.text:hover {
+    font-size: 50px;
+    filter: drop-shadow(0px 0px 5px rgb(140, 0, 255));
 }
 
+.map-point.text.disabled-while-anweisung {
+    opacity: 0;
+}
+
+/* Magic Points */
+.map-point.magic {
+    width: 40px;
+    height: 40px;
+    max-height: initial;
+    max-width: initial;
+    filter: drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.424));
+}
+
+.map-point.magic:hover {
+    width: 50px !important;
+    height: 50px !important;
+}
+
+.map-point.magic.fullscreen.playing {
+    animation: magicRotate 5s infinite linear;
+}
+
+.map-point.magic.fullscreen.paused {
+    animation: magicRotate 5s infinite linear;
+    animation-play-state: paused;
+}
+
+.map-point.magic.fullscreen.stopped {
+    animation: none;
+}
+
+/* Pflanze Points */
+.map-point.pflanze {
+    width: 100px !important;
+    height: 100px !important;
+    max-height: initial;
+    max-width: initial;
+    border-radius: 100%;
+    filter: blur(10px);
+    transition: filter 2s ease-in-out;
+    animation: pulse 3s infinite alternate ease-in-out;
+}
+
+.map-point.pflanze:hover {
+    width: auto;
+    height: 120%;
+    filter: drop-shadow(0px 0px 20px rgb(255, 0, 0));
+}
+
+.map-point.pflanze.fullscreen {
+    filter: blur(0px);
+    background-color: rgba(255, 0, 0, 0);
+    transition: all 2s ease-in-out;
+    animation: none;
+}
+
+.map-point.pflanze.fullscreen.playing {
+    filter: drop-shadow(0px 0px 10px rgb(255, 255, 255));
+    transition: all 2s ease-in-out;
+}
+
+.map-point.pflanze.fullscreen.paused,
+.map-point.pflanze.fullscreen.stopped {
+    filter: none;
+}
+
+/* ============================
+   MAP POINT POSITIONS
+   ============================ */
 #pflanze-lattich {
     top: 70svh;
     left: 54svh;
@@ -237,6 +348,11 @@ img {
 #pflanze2 {
     top: 77svh;
     left: 24svh;
+}
+
+#pflanze-lz2 {
+    top: 77svh;
+    left: 76svh;
 }
 
 #pflanze-spitzw1 {
@@ -264,25 +380,10 @@ img {
     left: 92svh;
 }
 
-#pflanze-lz2 {
-    top: 77svh;
-    left: 76svh;
-}
-
 #redCircle1 {
     top: 55svh;
     left: 15svh;
 }
-
-/* #redCircle2 {
-    top: 39svh;
-    left: 72svh;
-} */
-
-/* #redCircle3 {
-    top: 48svh;
-    left: 110svh;
-} */
 
 #redCircle2 {
     top: 77svh;
@@ -324,51 +425,62 @@ img {
     left: 48svh;
 }
 
-/* Anweisungsbox angepasst für einzelne scrollbare Anweisungen */
+/* ============================
+   ANWEISUNGSBOX
+   ============================ */
 .anweisungsbox {
-    display: block;
     position: fixed;
     left: 0;
     top: 0;
     width: 100svw;
     height: 100svh;
+    padding: 20px 20px 80px;
+    z-index: 100;
+    display: block;
     background-color: rgba(161, 18, 223, 0.2);
+    backdrop-filter: blur(10px);
     font-family: 'ReplicaStd', sans-serif;
     font-size: 23px;
     line-height: 1;
     -webkit-text-stroke: 1.3px black;
-    z-index: 40;
-    transition: all 1.5s ease-in-out, filter 2s ease-in-out;
-    backdrop-filter: blur(10px);
     opacity: 0;
     filter: blur(10px);
     pointer-events: none;
-    padding: 20px;
-    padding-bottom: 80px;
+    transition: all 1.5s ease-in-out, filter 2s ease-in-out;
 }
 
 .anweisungsbox.visible {
-    backdrop-filter: blur(3px);
-    filter: blur(0px);
     opacity: 1;
+    filter: blur(0px);
+    backdrop-filter: blur(3px);
     pointer-events: all;
+}
+
+.anweisungsbox.visible~.hintergrund {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
 .anweisung {
     display: none;
     height: calc(100vh - 60px);
+    max-width: 500px;
+    margin: 0;
+    padding-right: 10px;
+    text-align: left;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    margin: 0;
-    text-align: left;
-    max-width: 500px;
-    /* word-wrap: break-word; */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     hyphens: none;
     -webkit-hyphens: none;
     -moz-hyphens: none;
-    padding-right: 10px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+}
+
+.anweisung::-webkit-scrollbar {
+    display: none;
 }
 
 .anweisung span {
@@ -376,48 +488,44 @@ img {
     font-family: 'Ouroboros';
 }
 
-.anweisung::-webkit-scrollbar {
-    display: none;
+.auszeichnung {
+    font-size: 28px !important;
+    line-height: 0.9;
+    font-family: 'Cosplay' !important;
 }
 
-/* Close-Button-Box - ähnlich der Audio-Control-Strip */
+/* ============================
+   BUTTONS & CONTROLS
+   ============================ */
 .close-button-strip {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100svw;
     height: 40px;
-    background-color: rgba(162, 18, 223, 0.477);
-    /* Transparent anstatt lila */
-    backdrop-filter: blur(1px);
     z-index: 101;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 1.5s ease-in-out, filter 2s ease-in-out;
-    /* opacity: 50%; */
-    /* filter: blur(10px); */
+    background-color: rgba(162, 18, 223, 0.477);
+    backdrop-filter: blur(1px);
     pointer-events: none;
-}
-
-.anweisungsbox.visible~.hintergrund {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-    height: 100%;
+    transition: all 1.5s ease-in-out, filter 2s ease-in-out;
 }
 
 .close-button-strip.visible {
     opacity: 1;
     filter: blur(0px);
     pointer-events: all;
-    /* backdrop-filter: blur(10px); */
 }
 
 .close-button {
     position: relative;
     bottom: 0;
-    transform: none;
+    z-index: 102;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: none;
     border: none;
     font-family: 'ReplicaStd';
@@ -425,13 +533,11 @@ img {
     color: #000000;
     -webkit-text-stroke: 1.3px #000000;
     cursor: pointer;
-    z-index: 102;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
     opacity: 1;
     visibility: visible;
+    transform: none;
+    pointer-events: all;
+    transition: all 0.3s ease;
 }
 
 .close-button:hover {
@@ -442,15 +548,87 @@ img {
     transform: scale(0.95);
 }
 
+.audio-control-strip {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100svw;
+    height: 40px;
+    z-index: 102;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(162, 18, 223, 0.477);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    filter: blur(10px);
+    pointer-events: none;
+    transition: all 1.5s ease-in-out, filter 2s ease-in-out;
+}
+
+.audio-control-strip.visible {
+    opacity: 1;
+    filter: blur(0px);
+    backdrop-filter: blur(3px);
+    pointer-events: all;
+}
+
+.audio-control-strip .audio-play-pause-button {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    z-index: 103;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: none;
+    border: none;
+    font-family: 'Ouroboros';
+    font-size: 20px;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: all 0.3s ease;
+}
+
+.audio-control-strip .audio-play-pause-button:hover {
+    transform: scale(1.1);
+}
+
+.audio-control-strip .audio-play-pause-button:active {
+    transform: scale(0.95);
+}
+
+/* ============================
+   UTILITY CLASSES
+   ============================ */
+.disabled-while-anweisung {
+    opacity: 0.8;
+    pointer-events: none;
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    animation: none !important;
+    transition: opacity 0.3s ease;
+}
+
 .reference-point {
-    display: none;
     position: absolute;
-    width: 5px;
-    height: 5px;
-    background-color: red;
-    z-index: 1000;
     top: 0;
     left: 0;
+    width: 5px;
+    height: 5px;
+    z-index: 1000;
+    display: none;
+    background-color: red;
     pointer-events: none;
 }
 
@@ -469,103 +647,24 @@ img {
     left: 155svh;
 }
 
-/* Audio Control Strip - schmaler Streifen am unteren Bildrand */
-.audio-control-strip {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100svw;
-    height: 40px;
-    background-color: rgba(162, 18, 223, 0.477);
-    backdrop-filter: blur(10px);
-    z-index: 102;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 1.5s ease-in-out, filter 2s ease-in-out;
-    opacity: 0;
-    filter: blur(10px);
-    pointer-events: none;
-}
-
-.audio-control-strip.visible {
-    opacity: 1;
-    filter: blur(0px);
-    pointer-events: all;
-    backdrop-filter: blur(3px);
-}
-
-/* Play/Pause Button innerhalb des Streifens */
-.audio-control-strip .audio-play-pause-button {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    transform: none;
-    background: none;
-    border: none;
-    font-family: 'Ouroboros';
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
-    color: rgb(0, 0, 0);
-    cursor: pointer;
-    z-index: 103;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    opacity: 1;
-    visibility: visible;
-}
-
-.audio-control-strip .audio-play-pause-button:hover {
-    transform: scale(1.1);
-}
-
-.audio-control-strip .audio-play-pause-button:active {
-    transform: scale(0.95);
-}
-
-.disabled-while-anweisung {
-    pointer-events: none;
-    touch-action: none;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
-    animation: none !important;
-}
-
-.map-point.text.disabled-while-anweisung {
-    opacity: 0;
-}
-
-/* Ensure anweisungsbox has higher z-index than map-points */
-.anweisungsbox {
-    z-index: 100 !important;
-}
-
-/* Ensure close-button-strip close button is clickable */
-.close-button-strip .close-button {
-    z-index: 101 !important;
-    pointer-events: all;
-}
-
-/* Make sure audio button stays on top */
-.audio-play-pause-button {
-    z-index: 102 !important;
-}
-
-
 #gpsUpdateBtn,
 #gpsTrackingBtn,
 #gpsTestingBtn,
 #gpsStatus {
     display: none;
+}
+
+/* ============================
+   ANIMATIONS
+   ============================ */
+@keyframes arrowPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.1);
+    }
 }
 
 @keyframes magicRotate {
@@ -580,16 +679,6 @@ img {
     }
 }
 
-@keyframes pflanzeImagePulse {
-    0% {
-        transform: scale(1);
-    }
-
-    100% {
-        transform: scale(0.9);
-    }
-}
-
 @keyframes pulse {
     0% {
         transform: scale(1) translate(-50%, -50%);
@@ -600,116 +689,12 @@ img {
     }
 }
 
-.start-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100dvw;
-    height: 100svh;
-    background-color: transparent;
-    z-index: 1000;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    backdrop-filter: blur(5px);
-    transition: all 1s ease-in-out;
-    opacity: 1;
-    visibility: visible;
-}
-
-.start-overlay.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-.start-content {
-    color: rgb(0, 0, 0);
-    font-family: 'ReplicaStd', sans-serif;
-    font-size: 25px;
-    line-height: 1.1;
-    -webkit-text-stroke: 1.3px rgb(0, 0, 0);
-    filter: drop-shadow(0px 0px 20px rgb(255, 255, 255));
-    width: 90%;
-    margin-bottom: 50px;
-    /* text-align: center; */
-    /* Zentriert den Button und Text */
-}
-
-.start-description {
-    margin-bottom: 0;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    /* word-break: break-word !important; */
-}
-
-.start-description span {
-    font-size: 40px;
-    font-family: 'Ouroboros';
-}
-
-/* SVG-Pfeil-Button mit Pulsing-Animation */
-.svg-arrow-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0 auto 30px auto;
-    display: block;
-    transition: all 0.3s ease;
-    width: 30svh;
-    height: auto;
-    /* Pulsing-Animation hinzugefügt */
-    animation: arrowPulse 3s infinite alternate ease-in-out;
-}
-
-.svg-arrow-button:hover {
-    transform: translateY(-3px) scale(1.1);
-    filter: drop-shadow(0 8px 15px rgba(150, 0, 215, 0.4));
-    /* Animation beim Hover pausieren (optional) */
-    animation-play-state: paused;
-}
-
-.svg-arrow-button:active {
-    transform: translateY(0) scale(0.95);
-}
-
-/* Das SVG im Button */
-.arrow-svg {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: all 0.1s ease;
-    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.3));
-}
-
-.svg-arrow-button:hover .arrow-svg {
-    filter: drop-shadow(0 5px 15px rgba(150, 0, 215, 0.6));
-}
-
-/* Neue Pulse-Animation für den Pfeil (ohne blur) */
-@keyframes arrowPulse {
+@keyframes pflanzeImagePulse {
     0% {
         transform: scale(1);
     }
 
     100% {
-        transform: scale(1.1);
+        transform: scale(0.9);
     }
-}
-
-
-/* SVG als img-Element */
-.start-overlay-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: fill;
-    object-position: center;
-    opacity: 0.5;
-    z-index: -1;
-    filter: drop-shadow(0px 0px 20px rgba(81, 255, 0, 0.336));
 }

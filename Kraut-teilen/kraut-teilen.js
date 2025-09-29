@@ -1,43 +1,53 @@
+/* ============================
+   KRAUT TEILEN - MAIN SCRIPT
+   ============================ */
+
 document.addEventListener('DOMContentLoaded', function () {
+
+    // ===== DOM ELEMENTS =====
     const morphContainer = document.getElementById('morphContainer');
     const plusIcon = document.getElementById('plusIcon');
     const plantInput = document.getElementById('plantInput');
     const submitBtn = document.getElementById('submitBtn');
-
-    // MorphContainer2 Elemente
+    const startButton = document.getElementById('startButton');
     const morphContainer2 = document.getElementById('morphContainer2');
     const plusIcon2 = document.getElementById('plus-icon');
 
+    // ===== STATE =====
     let isExpanded = false;
-    let isSubmitting = false;
     let isExpanded2 = false;
+    let isSubmitting = false;
 
-    // ===== MORPHCONTAINER (Original) =====
+    // ===== START OVERLAY HANDLER =====
+    if (startButton) {
+        startButton.addEventListener('click', function () {
+            const startOverlay = document.getElementById('startOverlay');
+            if (startOverlay) {
+                startOverlay.classList.add('hidden');
+            }
+            document.body.classList.remove('start-active');
+        });
+    }
 
-    // Container Click
+    // ===== MORPH CONTAINER 1 (PLANT INPUT) =====
+
+    // Event Listeners
     morphContainer.addEventListener('click', function (e) {
         if (!isExpanded && !isSubmitting) {
             expand();
         }
     });
 
-    // Plus Icon Click
     plusIcon.addEventListener('click', function (e) {
         e.stopPropagation();
-        if (isExpanded) {
-            collapse();
-        } else {
-            expand();
-        }
+        isExpanded ? collapse() : expand();
     });
 
-    // Submit Button
     submitBtn.addEventListener('click', function (e) {
         e.stopPropagation();
         submitPlant();
     });
 
-    // Input Events
     plantInput.addEventListener('click', function (e) {
         e.stopPropagation();
     });
@@ -48,10 +58,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Expand/Collapse Functions
     function expand() {
         if (isExpanded) return;
 
-        // Schließe morphContainer2 falls es geöffnet ist
         if (isExpanded2) {
             collapse2();
         }
@@ -68,14 +78,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!isExpanded || isSubmitting) return;
 
         isExpanded = false;
-        morphContainer.classList.remove('expanded');
+        morphContainer.classList.remove('expanded', 'success', 'error');
         plantInput.value = '';
-        morphContainer.classList.remove('success', 'error');
     }
 
-    // ===== MORPHCONTAINER2 EVENT LISTENERS =====
+    // ===== MORPH CONTAINER 2 (INFO) =====
 
-    // MorphContainer2 Event Listeners
     if (morphContainer2 && plusIcon2) {
         morphContainer2.addEventListener('click', function (e) {
             if (!isExpanded2) {
@@ -85,20 +93,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         plusIcon2.addEventListener('click', function (e) {
             e.stopPropagation();
-            if (isExpanded2) {
-                collapse2();
-            } else {
-                expand2();
-            }
+            isExpanded2 ? collapse2() : expand2();
         });
     }
-
-    // ===== MORPHCONTAINER2 FUNCTIONS =====
 
     function expand2() {
         if (isExpanded2) return;
 
-        // Schließe morphContainer falls es geöffnet ist
         if (isExpanded) {
             collapse();
         }
@@ -114,9 +115,8 @@ document.addEventListener('DOMContentLoaded', function () {
         morphContainer2.classList.remove('expanded');
     }
 
-    // ===== GEMEINSAME EVENT LISTENER =====
+    // ===== KEYBOARD SHORTCUTS =====
 
-    // Escape Key für beide Container
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
             if (isExpanded) {
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // ===== PLANT SUBMISSION LOGIC =====
+    // ===== PLANT SUBMISSION =====
 
     async function submitPlant() {
         if (isSubmitting) return;
@@ -135,9 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const plantName = plantInput.value.trim();
 
         if (!plantName) {
-            // Notification entfernt - nur visuelles Feedback über morphContainer
-            morphContainer.classList.add('error');
-            setTimeout(() => morphContainer.classList.remove('error'), 600);
+            showError();
             return;
         }
 
@@ -146,92 +144,107 @@ document.addEventListener('DOMContentLoaded', function () {
         submitBtn.disabled = true;
 
         try {
-            // Send data to Google Sheets via Apps Script using JSONP to avoid CORS
             await submitToGoogleSheets(plantName);
-
-            morphContainer.classList.add('success');
-            // Notification entfernt - nur visuelles Feedback über morphContainer
+            showSuccess();
 
             setTimeout(() => {
                 collapse();
             }, 1500);
 
         } catch (error) {
-            console.error('Error:', error);
-            morphContainer.classList.add('error');
-            // Notification entfernt - nur visuelles Feedback über morphContainer
-            setTimeout(() => morphContainer.classList.remove('error'), 600);
+            console.error('Submission error:', error);
+            showError();
+        } finally {
+            isSubmitting = false;
+            submitBtn.innerHTML = '→';
+            submitBtn.disabled = false;
         }
-
-        isSubmitting = false;
-        submitBtn.innerHTML = '→';
-        submitBtn.disabled = false;
     }
 
-    async function submitToGoogleSheets(plantName) {
-        // Get GPS coordinates
-        let gpsLocation = 'Standort nicht verfügbar';
+    function showSuccess() {
+        morphContainer.classList.add('success');
+    }
 
+    function showError() {
+        morphContainer.classList.add('error');
+        setTimeout(() => morphContainer.classList.remove('error'), 600);
+    }
+
+    // ===== GOOGLE SHEETS INTEGRATION =====
+
+    async function submitToGoogleSheets(plantName) {
+        const gpsLocation = await getGPSLocation();
+
+        const formData = new URLSearchParams({
+            plant: plantName.trim(),
+            location: gpsLocation
+        });
+
+        logSubmissionData(formData);
+
+        const response = await fetch(
+            'https://script.google.com/macros/s/AKfycbwS_MbLps-y9n88kbfU_kq0AOlixCns7L8pq6RCTJ4laPJw5BYg5CvSpvCvAnr0hYUf/exec',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const responseText = await response.text();
+        console.log('Google Apps Script response:', responseText);
+        console.log('Successfully submitted:', { plant: plantName.trim(), location: gpsLocation });
+    }
+
+    // ===== GPS LOCATION =====
+
+    async function getGPSLocation() {
         try {
-            if (window.app && window.app.gpsManager) {
+            // Try app GPS manager first
+            if (window.app?.gpsManager) {
                 const location = await window.app.gpsManager.getCurrentLocation();
                 if (location?.lat && location?.lng) {
-                    gpsLocation = `${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}`;
+                    return `${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}`;
                 }
-            } else if (navigator.geolocation) {
+            }
+
+            // Fallback to browser geolocation
+            if (navigator.geolocation) {
                 const position = await new Promise((resolve, reject) => {
                     navigator.geolocation.getCurrentPosition(resolve, reject, {
                         enableHighAccuracy: true,
                         timeout: 5000
                     });
                 });
-                gpsLocation = `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
+                return `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
             }
         } catch (error) {
             console.warn('GPS location error:', error);
         }
 
-        // Debug: Log what we're sending
-        const formData = new URLSearchParams({
-            plant: plantName.trim(),
-            location: gpsLocation
-        });
+        return 'Standort nicht verfügbar';
+    }
 
+    function logSubmissionData(formData) {
         console.log('Form data being sent:');
         for (const [key, value] of formData.entries()) {
             console.log(`${key}: "${value}"`);
-        }
-
-        try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbwS_MbLps-y9n88kbfU_kq0AOlixCns7L8pq6RCTJ4laPJw5BYg5CvSpvCvAnr0hYUf/exec', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: formData
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-
-            const responseText = await response.text();
-            console.log('Google Apps Script response:', responseText);
-            console.log('Successfully submitted:', { plant: plantName.trim(), location: gpsLocation });
-        } catch (error) {
-            console.error('Submission error:', error);
-            throw error;
         }
     }
 
     // ===== GLOBAL FUNCTIONS =====
 
-    // Global function for testing GPS access (can be called from browser console)
     window.testGPS = async function () {
         console.log('=== GPS TEST START ===');
         console.log('navigator.geolocation:', navigator.geolocation);
         console.log('window.app:', window.app);
-        console.log('window.app.gpsManager:', window.app ? window.app.gpsManager : 'no app');
+        console.log('window.app.gpsManager:', window.app?.gpsManager || 'no app');
 
         if (navigator.geolocation) {
             try {
@@ -249,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        if (window.app && window.app.gpsManager) {
+        if (window.app?.gpsManager) {
             try {
                 const location = await window.app.gpsManager.getCurrentLocation();
                 console.log('App GPS Manager success:', location);
@@ -257,20 +270,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('App GPS Manager error:', error);
             }
         }
+
         console.log('=== GPS TEST END ===');
     };
 
-    // Global function to close morphContainer from outside (e.g., from App.js)
     window.closeMorphContainer = function () {
-        if (isExpanded) {
-            collapse();
-        }
+        if (isExpanded) collapse();
     };
 
-    // Global function to close morphContainer2 from outside
     window.closeMorphContainer2 = function () {
-        if (isExpanded2) {
-            collapse2();
-        }
+        if (isExpanded2) collapse2();
     };
 });

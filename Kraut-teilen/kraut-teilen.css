@@ -1,39 +1,52 @@
-/* Morphing Container */
+/* ============================
+   MORPH CONTAINER BASE
+   ============================ */
 .morph-container {
     position: fixed;
-    bottom: 0px;
-    left: 0px;
-    height: 40px;
+    bottom: 0;
+    left: 0;
     width: 40px;
-    background: #48fd46;
-    border: none;
+    height: 40px;
+    z-index: 1000;
     display: flex;
     align-items: center;
+    background: #48fd46;
+    border: none;
     cursor: pointer;
-    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-    z-index: 1000;
     overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
+.morph-container.expanded {
+    width: 100vw;
+    cursor: default;
+    opacity: 1;
+}
+
+.morph-container.disabled-while-anweisung {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* ============================
+   MORPH CONTAINER 2 (INFO)
+   ============================ */
 #morphContainer2 {
     bottom: 40px !important;
-    background: #008c07;
-    height: 40px !important;
     width: 40px !important;
-    /* Mobile: Nur width animieren, height und bottom sofort setzen */
+    height: 40px !important;
+    background: #008c07;
     transition: width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
 }
 
-/* Mobile: Expandierter Zustand (Standard) */
 #morphContainer2.expanded {
+    bottom: 0 !important;
+    width: 100vw !important;
     height: auto !important;
     min-height: 80px !important;
-    bottom: 0px !important;
-    width: 100vw !important;
     padding: 15px 20px !important;
     transform-origin: bottom left !important;
-    /* Beibehalten */
-    /* Smooth Transition nur für width und padding */
     transition: width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1),
         padding 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
 }
@@ -50,72 +63,39 @@
     transition: opacity 0.2s ease 0.2s !important;
 }
 
-/* Mobile: Text-Styling */
 #morphContainer2 .question-text {
-    white-space: normal !important;
-    height: auto !important;
     width: 100% !important;
+    height: auto !important;
     display: block !important;
-    overflow: visible !important;
     font-size: 13px !important;
+    white-space: normal !important;
+    overflow: visible !important;
 }
 
-
-
-.question-text span {
-    font-family: 'Cosplay';
-}
-
-
-
-.morph-container.expanded {
-    width: 100vw;
-    cursor: default;
-    opacity: 1;
-}
-
-/* Plus Icon */
+/* ============================
+   PLUS ICON
+   ============================ */
 .plus-icon {
     position: absolute;
     left: 20px;
     top: 20px;
-    transform: translateY(-50%) translateX(-50%);
+    z-index: 2;
     font-family: 'Ouvriere';
-    /* -webkit-text-stroke: 1.3px #000000; */
     font-size: 30px;
     font-weight: bold;
     color: rgb(0, 0, 0);
+    transform: translateY(-50%) translateX(-50%);
     transition: all 0.4s ease;
-    z-index: 2;
 }
 
 .morph-container.expanded .plus-icon {
-    transform: translateY(-50%) rotate(45deg);
     left: 10px;
-
+    transform: translateY(-50%) rotate(45deg);
 }
 
-@media (min-width: 769px) {
-    #morphContainer2 {
-        /* Desktop: Alle Eigenschaften animieren */
-        transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-    }
-
-    #morphContainer2.expanded {
-        height: 80px !important;
-        width: 450px !important;
-        padding: 15px 20px !important;
-        bottom: 0px !important;
-    }
-
-    #morphContainer2 .form-content {
-        align-items: center !important;
-        height: 100% !important;
-        padding-top: 0 !important;
-    }
-}
-
-/* Form Content */
+/* ============================
+   FORM CONTENT
+   ============================ */
 .form-content {
     position: absolute;
     left: 50px;
@@ -134,16 +114,22 @@
 }
 
 .question-text {
+    min-width: 140px;
+    margin-right: 12px;
     color: rgb(0, 0, 0);
     font-family: 'ReplicaStd';
-    /* -webkit-text-stroke: 1.2px #000000; */
-    line-height: 0.95;
     font-size: 13px;
-    margin-right: 12px;
+    line-height: 0.95;
     white-space: nowrap;
-    min-width: 140px;
 }
 
+.question-text span {
+    font-family: 'Cosplay';
+}
+
+/* ============================
+   INPUT & BUTTONS
+   ============================ */
 .input-wrapper {
     flex: 1;
     position: relative;
@@ -151,15 +137,15 @@
 
 .plant-input {
     width: 100%;
-    border: none;
-    font-family: 'Ouvriere';
-    background: rgba(255, 255, 255, 0.9);
     padding: 4px 4px 4px 10px;
+    border: none;
     border-radius: 15px;
+    font-family: 'Ouvriere';
     font-size: 14px;
+    background: rgba(255, 255, 255, 0.9);
     outline: none;
-    transition: all 0.3s ease;
     box-sizing: border-box;
+    transition: all 0.3s ease;
 }
 
 .plant-input:focus {
@@ -181,20 +167,19 @@
 .submit-btn {
     width: 30px;
     height: 30px;
-    font-family: 'Ouvriere';
-    border: none;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    border: none;
+    background: transparent;
+    font-family: 'Ouvriere';
     font-size: 14px;
-    transition: all 0.2s ease;
-    background: #ffffff00;
     color: rgb(0, 0, 0);
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .submit-btn:hover:not(:disabled) {
-    /* background: #00a085; */
     transform: scale(1.1);
 }
 
@@ -203,9 +188,10 @@
     cursor: not-allowed;
 }
 
-/* Success/Error Animation */
+/* ============================
+   FEEDBACK ANIMATIONS
+   ============================ */
 .morph-container.success {
-    /* background: #6600ff; */
     animation: successPulse 0.6s ease;
 }
 
@@ -242,36 +228,23 @@
     }
 }
 
-
-
-/* Ausblenden wenn disabled */
-.morph-container.disabled-while-anweisung {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-@media (min-width: 769px) {
-    .morph-container.expanded {
-        width: 450px;
-    }
-}
-
-/* Notification Styles */
+/* ============================
+   NOTIFICATIONS
+   ============================ */
 .kraut-notification {
     position: fixed;
     top: 20px;
     right: 20px;
+    max-width: 300px;
     padding: 12px 20px;
+    z-index: 100;
     border-radius: 8px;
     font-family: 'ReplicaStd';
     font-size: 14px;
     color: white;
-    z-index: 100;
+    word-wrap: break-word;
     transform: translateX(100%);
     transition: transform 0.3s ease;
-    max-width: 300px;
-    word-wrap: break-word;
 }
 
 .kraut-notification.show {
@@ -286,4 +259,30 @@
 .kraut-notification.error {
     background: #f44336;
     border: 2px solid #d32f2f;
+}
+
+/* ============================
+   DESKTOP RESPONSIVE
+   ============================ */
+@media (min-width: 769px) {
+    .morph-container.expanded {
+        width: 450px;
+    }
+
+    #morphContainer2 {
+        transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    }
+
+    #morphContainer2.expanded {
+        width: 450px !important;
+        height: 80px !important;
+        bottom: 0 !important;
+        padding: 15px 20px !important;
+    }
+
+    #morphContainer2 .form-content {
+        align-items: center !important;
+        height: 100% !important;
+        padding-top: 0 !important;
+    }
 }
