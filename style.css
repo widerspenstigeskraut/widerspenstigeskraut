@@ -40,9 +40,15 @@
     box-sizing: border-box;
 }
 
-html {
+html,
+body {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
     overscroll-behavior: none;
     overscroll-behavior-x: none;
+    touch-action: pan-x;
 }
 
 body {
@@ -50,18 +56,9 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    overscroll-behavior: none;
-    overscroll-behavior-x: none;
     overflow-y: hidden !important;
     overflow-x: auto;
-    -webkit-overflow-scrolling: auto;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 body.no-scroll {
@@ -80,9 +77,11 @@ img {
 .hintergrund {
     position: relative;
     width: min-content;
-    height: 100%;
+    height: 100vh;
+    max-height: 100vh;
     z-index: 1;
     overscroll-behavior-x: none;
+    touch-action: pan-x;
 }
 
 .farbflaeche {
@@ -256,6 +255,7 @@ body.start-active .close-button-strip {
     user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 /* Text Points */
@@ -281,6 +281,7 @@ body.start-active .close-button-strip {
     max-height: initial;
     max-width: initial;
     filter: drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.424));
+    transition: width 0.3s ease, height 0.3s ease, filter 0.3s ease;
 }
 
 .map-point.magic:hover {
@@ -288,17 +289,32 @@ body.start-active .close-button-strip {
     height: 50px !important;
 }
 
+.map-point.magic.fullscreen {
+    width: 60px !important;
+    height: 60px !important;
+    filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.8));
+    animation: none;
+}
+
 .map-point.magic.fullscreen.playing {
     animation: magicRotate 5s infinite linear;
+    filter: drop-shadow(0px 0px 20px rgb(255, 0, 0));
 }
 
 .map-point.magic.fullscreen.paused {
+    width: 60px !important;
+    height: 60px !important;
     animation: magicRotate 5s infinite linear;
     animation-play-state: paused;
+    filter: drop-shadow(0px 0px 20px rgb(255, 0, 0));
 }
 
 .map-point.magic.fullscreen.stopped {
+    width: 40px !important;
+    height: 40px !important;
     animation: none;
+    filter: drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.424));
+    transition: width 0.3s ease, height 0.3s ease, filter 0.5s ease;
 }
 
 /* Pflanze Points */
@@ -309,31 +325,51 @@ body.start-active .close-button-strip {
     max-width: initial;
     border-radius: 100%;
     filter: blur(10px);
-    transition: filter 2s ease-in-out;
+    transition: filter 0.8s ease-in-out, width 0.5s ease, height 0.5s ease;
     animation: pulse 3s infinite alternate ease-in-out;
+    will-change: filter, transform, width, height;
 }
 
 .map-point.pflanze:hover {
-    width: auto;
-    height: 120%;
     filter: drop-shadow(0px 0px 20px rgb(255, 0, 0));
 }
 
 .map-point.pflanze.fullscreen {
+    width: 150px !important;
+    height: 150px !important;
     filter: blur(0px);
     background-color: rgba(255, 0, 0, 0);
-    transition: all 2s ease-in-out;
+    transition: filter 0.5s ease-in-out, width 0.5s ease, height 0.5s ease;
     animation: none;
 }
 
 .map-point.pflanze.fullscreen.playing {
-    filter: drop-shadow(0px 0px 10px rgb(255, 255, 255));
-    transition: all 2s ease-in-out;
+    filter: blur(0px) drop-shadow(0px 0px 15px rgb(255, 0, 0)) drop-shadow(0px 0px 30px rgba(255, 0, 0, 0.6)) drop-shadow(0px 0px 50px rgba(255, 0, 0, 0.3));
+    animation: pflanzeImagePulse 3s infinite alternate ease-in-out;
+    transition: filter 0.3s ease-in-out;
 }
 
-.map-point.pflanze.fullscreen.paused,
+.map-point.pflanze.fullscreen.paused {
+    width: 150px !important;
+    height: 150px !important;
+    filter: blur(0px) drop-shadow(0px 0px 15px rgb(255, 0, 0)) drop-shadow(0px 0px 30px rgba(255, 0, 0, 0.6)) drop-shadow(0px 0px 50px rgba(255, 0, 0, 0.3));
+    animation: pflanzeImagePulse 3s infinite alternate ease-in-out;
+    animation-play-state: paused;
+}
+
 .map-point.pflanze.fullscreen.stopped {
-    filter: none;
+    width: 100px !important;
+    height: 100px !important;
+    filter: blur(10px);
+    animation: pulse 3s infinite alternate ease-in-out;
+    transition: filter 0.8s ease-in-out, width 0.5s ease, height 0.5s ease;
+}
+
+.map-point.pflanze img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
 }
 
 /* ============================
@@ -691,10 +727,20 @@ body.start-active .close-button-strip {
 
 @keyframes pflanzeImagePulse {
     0% {
-        transform: scale(1);
+        transform: translate(-50%, -50%) scale(1);
     }
 
     100% {
-        transform: scale(0.9);
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1.05);
     }
 }

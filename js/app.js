@@ -546,6 +546,73 @@ class App {
         }
     }
 
+    initTouchHandlers() {
+        // Besseres Touch-Handling für alle Map-Points
+        const mapPoints = document.querySelectorAll('.map-point');
+
+        mapPoints.forEach(point => {
+            let touchHandled = false;
+            let touchStartTime = 0;
+            let initialTouch = null;
+
+            point.addEventListener('touchstart', function (e) {
+                touchHandled = false;
+                touchStartTime = Date.now();
+                initialTouch = e.touches[0];
+
+                // Visuelles Feedback
+                if (!$(this).hasClass('disabled-while-anweisung')) {
+                    this.style.transform = 'translate(-50%, -50%) scale(0.95)';
+                }
+            }, { passive: true });
+
+            point.addEventListener('touchmove', function (e) {
+                // Wenn der Touch sich zu viel bewegt, ist es ein Scroll - kein Click
+                if (initialTouch) {
+                    const currentTouch = e.touches[0];
+                    const deltaX = Math.abs(currentTouch.clientX - initialTouch.clientX);
+                    const deltaY = Math.abs(currentTouch.clientY - initialTouch.clientY);
+
+                    if (deltaX > 10 || deltaY > 10) {
+                        touchHandled = true; // Mark as scroll, not click
+                        this.style.transform = 'translate(-50%, -50%) scale(1)';
+                    }
+                }
+            }, { passive: true });
+
+            point.addEventListener('touchend', function (e) {
+                const touchDuration = Date.now() - touchStartTime;
+
+                // Nur als Click behandeln wenn:
+                // - nicht schon behandelt (kein Scroll)
+                // - Touch war kurz genug (< 500ms)
+                // - Element ist nicht disabled
+                if (!touchHandled &&
+                    touchDuration < 500 &&
+                    !$(this).hasClass('disabled-while-anweisung')) {
+
+                    touchHandled = true;
+                    e.preventDefault();
+
+                    // Visuelles Feedback zurücksetzen
+                    this.style.transform = 'translate(-50%, -50%) scale(1)';
+
+                    // Trigger the click event
+                    $(this).trigger('click');
+                } else {
+                    // Reset visual feedback
+                    this.style.transform = 'translate(-50%, -50%) scale(1)';
+                }
+            });
+
+            point.addEventListener('touchcancel', function (e) {
+                this.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+        });
+
+        console.log('Touch-Handler für', mapPoints.length, 'Map-Points initialisiert');
+    }
+
     autoStartGPS() {
         if (this.gpsManager.isGPSAvailable()) {
             setTimeout(() => {

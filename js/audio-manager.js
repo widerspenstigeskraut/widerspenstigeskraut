@@ -31,9 +31,14 @@ class AudioManager {
       this.currentSVGAudio = null;
       this.isPaused = false;
 
-      // Animation stoppen für Magic-Elemente
+      // Animation stoppen und zurück zum Normalzustand
       if (this.currentPlayingElement && this.currentPlayingElement.hasClass('magic')) {
-        this.currentPlayingElement.removeClass('playing paused').addClass('stopped');
+        this.currentPlayingElement.removeClass('playing paused fullscreen').addClass('stopped');
+
+        // Nach kurzer Verzögerung auch stopped entfernen
+        setTimeout(() => {
+          this.currentPlayingElement.removeClass('stopped');
+        }, 100);
       }
     }
   }
@@ -45,9 +50,14 @@ class AudioManager {
       this.currentPflanzeAudio = null;
       this.isPaused = false;
 
-      // Shadow entfernen für Pflanzen-Elemente
+      // Shadow entfernen und zurück zum Normalzustand
       if (this.currentPlayingElement && this.currentPlayingElement.hasClass('pflanze')) {
-        this.currentPlayingElement.removeClass('playing paused').addClass('stopped');
+        this.currentPlayingElement.removeClass('playing paused fullscreen').addClass('stopped');
+
+        // Nach kurzer Verzögerung auch stopped entfernen
+        setTimeout(() => {
+          this.currentPlayingElement.removeClass('stopped');
+        }, 100);
       }
     }
   }
@@ -57,7 +67,7 @@ class AudioManager {
       this.currentPflanzeAudio.pause();
       this.isPaused = true;
 
-      // Shadow entfernen für Pflanzen-Elemente
+      // NUR die Animation pausieren, nicht den Shadow entfernen
       if (this.currentPlayingElement && this.currentPlayingElement.hasClass('pflanze')) {
         this.currentPlayingElement.removeClass('playing').addClass('paused');
       }
@@ -87,7 +97,7 @@ class AudioManager {
         this.currentPflanzeAudio.play();
         this.isPaused = false;
 
-        // Shadow wieder anzeigen für Pflanzen-Elemente
+        // Animation wieder starten
         if (this.currentPlayingElement && this.currentPlayingElement.hasClass('pflanze')) {
           this.currentPlayingElement.removeClass('paused').addClass('playing');
         }
@@ -154,7 +164,17 @@ class AudioManager {
 
       this.currentPflanzeAudio.addEventListener('ended', () => {
         console.log('Audio beendet');
+
+        // Erst stopped State setzen
         element.removeClass('playing paused').addClass('stopped');
+
+        // Nach kurzer Verzögerung fullscreen entfernen und zurück zum Normalzustand
+        setTimeout(() => {
+          element.removeClass('fullscreen stopped');
+          // Trigger reflow für saubere Animation
+          void element[0].offsetWidth;
+        }, 100);
+
         this.currentPflanzeAudio = null;
         this.currentPlayingElement = null;
         this.isPaused = false;
@@ -222,9 +242,23 @@ class AudioManager {
         this.isPaused = false;
       });
 
-      this.currentSVGAudio.addEventListener('pause', () => {
-        console.log('Magic-Audio pausiert');
-        // Animation wird über pauseCurrentAudio() gesteuert
+      this.currentSVGAudio.addEventListener('ended', () => {
+        console.log('Magic-Audio beendet');
+
+        // Erst stopped State setzen
+        element.removeClass('playing paused').addClass('stopped');
+
+        // Nach kurzer Verzögerung fullscreen entfernen und zurück zum Normalzustand
+        setTimeout(() => {
+          element.removeClass('fullscreen stopped');
+          // Trigger reflow für saubere Animation
+          void element[0].offsetWidth;
+        }, 100);
+
+        this.currentSVGAudio = null;
+        this.currentPlayingElement = null;
+        this.isPaused = false;
+        resolve(true);
       });
 
       this.currentSVGAudio.addEventListener('ended', () => {
