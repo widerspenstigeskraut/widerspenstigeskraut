@@ -59,6 +59,7 @@ body {
     overflow-y: hidden !important;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    background-color: rgb(45, 116, 11);
 }
 
 body.no-scroll {
@@ -77,8 +78,8 @@ img {
 .hintergrund {
     position: relative;
     width: min-content;
-    height: 100vh;
-    max-height: 100vh;
+    height: 100svh;
+    max-height: 100svh;
     z-index: 1;
     overscroll-behavior-x: none;
     touch-action: pan-x;
@@ -501,7 +502,7 @@ body.start-active .close-button-strip {
 
 .anweisung {
     display: none;
-    height: calc(100vh - 60px);
+    height: calc(100svh - 60px);
     max-width: 500px;
     margin: 0;
     padding-right: 10px;
@@ -639,6 +640,24 @@ body.start-active .close-button-strip {
     transform: scale(0.95);
 }
 
+.audio-control-strip .audio-play-pause-button,
+.close-button,
+.submit-btn,
+button {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    outline: none !important;
+    tap-highlight-color: transparent !important;
+}
+
+.audio-control-strip .audio-play-pause-button:focus,
+.close-button:focus,
+.submit-btn:focus,
+button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 /* ============================
    UTILITY CLASSES
    ============================ */
@@ -732,15 +751,5 @@ body.start-active .close-button-strip {
 
     100% {
         transform: translate(-50%, -50%) scale(1.1);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        transform: translate(-50%, -50%) scale(1);
-    }
-
-    100% {
-        transform: translate(-50%, -50%) scale(1.05);
     }
 }
